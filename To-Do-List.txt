@@ -1,0 +1,158 @@
+
+# Front-end/Home page/Menu Sauce
+    * Recreate front-end & make it responsive with mobile devices as well
+        * Both Big And Small
+    * Create Mobile website design for Front-end
+    x Create a Search bar for Sauces to be looked up
+    - Finish Front-end
+    * Make Base Tab bar Responsive
+    * Fix Side bar Sizing when Changing Screens
+
+    // Menu Sauce
+        * Make anonymises user See Sauces but Must Sign-in for more
+        * They Must be signed in or create and account to Purchased
+        - Finish Front-end
+        - Make Images Bigger with Text
+
+# Add Sauce
+    * Only Staff can access this
+    - also make this mobile responsive
+    - Finish Front-end
+
+# Edit Sauce
+    * Also allows Sauce to be Deleted
+    * Only Staff can access this
+    - also make this mobile responsive
+    - Finish Front-end
+
+# Account Settings
+    x Account Image?
+    * Add Phone Number
+    * Add Address
+    x Add First-name (this Will be added in the User NOT the Account) # Changes with User
+    x Add Last-name (this Will be added in the User NOT the Account) # Changes with User
+    - Finish Front-end
+
+# Purchase Settings
+    - Card Info
+    - Finish Front-end
+    - ...
+
+# Data Sheet
+    - Google Sheet API
+    - Email API (Monthly Report Sent to Owners)
+    - Finish Front-end
+    - Gives Double_Dubs a Visual Grid on Sauces being Purchased
+    - Also Places Data Detail in a Google SpreadSheet
+
+# Contact us
+    - Email API
+    - Send Email to Double_Dubs
+    - Social Media
+
+# Cart
+    - Finish Front-end
+    * List of sauce with image
+    * Total Price of Each sauce
+    - Confirm & Continue to Payment Page
+    - Delete button for Sauce/ Transition effect
+    * Quantity & edit of Sauce
+
+# Payment Method
+    - Set up Cash-app API
+    - Confirm Email Address & Mailing Address
+    - Email Receipt
+    - Responsive submission response
+    - Finish Front-End
+    - Confirm to Pay
+    - Add Information to Google Sheet
+
+
+# Login
+    * Only Staff Users can access Add/Edit Sauce & Admin
+    * Non Users will be directed to Signup or Create login
+    - Forgot Password (Email API Setup)
+    - Finish Front-end
+
+# Signup
+    * Create a register website
+    - Finish Front-end
+    * Create new Account
+    * Create simi good-looking website
+
+# Logout
+    * Create a Logout Website
+        # Redirected to Home Page
+    - Finish Front-end
+    * Make this loop back to un-registered home page
+
+
+---- ORDER LIST ------
+
+* Learn how to set up apis in Django
+- Get there Business Email and Password for Emailing
+
+* (Email Api Setup)
+- Forgot Password (Email Api Setup)
+- Data Sheet Api (Google Sheet API) (Email API Setup)
+
+- Research on Cash-app api
+- Find out how they want there payment
+
+
+- Payment api
+
+
+
+
+
+
+------ QUESTIONS FOR COMPANY -------
+
+-----------TODAY'S LIST ----------------
+
+# Start with Main Page
+    - Erase old Image, add Logo Image
+    - Curved Letters above
+    - make Circular
+
+# Sauces
+    - Place Frame around image
+    - White Background
+    - Add Button change colors
+    - Change Font
+
+# Account
+    - Make Tabs or links?
+    - Make Separate forms to submit
+    - Add Cash-app tab (for information purposes)
+    - Change Font
+    - Make Responsive
+
+# Cart
+    - Change Background color
+    - Change Text color
+    - Change Button colors
+    - Erases Separators
+    - Make Submit Button (Links to new url that deals with Cash-app api)
+
+# Add & Edit
+    - Freshin Up
+    - Make Responsive
+
+# Base add new tab
+    - Create Mass Email tab
+        - Add Mass Email Tab
+        - Add Mass Employ Email Tab
+
+
+
+
+
+
+
+
+
+
+
+

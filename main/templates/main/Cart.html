@@ -1,0 +1,255 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Shoping Cart{% endblock %}
+
+{% block styles %}
+    <style>
+        /* Background color */
+        body, html {
+            background:linear-gradient(180deg, black 5%, olivedrab, black 99%);
+            background-size: 100% 100%;
+            height: fit-content;
+        }
+        /* Whole block */
+        .whole-block {
+            display:flex;
+            color:white;
+            align-items:center;
+            text-align:center;
+            margin-inline:125px;
+            margin-bottom: 15px;
+            border: 5px solid black;
+            position: relative;
+        }
+        /* Left block */
+        .left-block {
+            margin-right:50px;
+        }
+        .img {
+            display:flex;
+            width:270px;
+            height: 270px;
+        }
+
+        /* Middle block */
+        .mid-block {
+            display:flex;
+            flex-direction: column;
+            align-items: flex-end;
+            position:absolute;
+            right:125px
+        }
+
+        /* Right block*/
+        .right-block {
+            justify-content: space-evenly;
+
+        }
+        .words {
+            width:500px;
+        }
+
+        /* Add Button */
+        .add_content {
+            display:flex;
+            flex-direction: column;
+            width:fit-content;
+            text-align:center;
+        }
+        .content_btn {
+            display:flex;
+            background-color:black;
+            justify-content: space-between;
+            border-radius:1.5rem;
+            padding-inline:5px;
+            gap:25px;
+        }
+        .content_btn button {
+            height:35px;
+            width:35px;
+            border-radius:50%;
+            align-self:center;
+            background-color:olivedrab;
+            color:black;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            border-radius: 16px;
+            border: 3px solid olivedrab;
+            background-color:black;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block head %}Cart{% endblock %}
+
+{% block content %}
+    {% for sauce, amount in cart %}
+        <!-- Whole Block -->
+        <div class="whole-block">
+            <!-- Left Block -->
+            <div class="left-block">
+                <!-- Image -->
+                {% if sauce.image %}
+                    <img class='img' src="{{ sauce.image.url }}">
+                <!-- Default Image -->
+                {% else %}
+                    <img class='img' src="/media/default/no_image.png">
+                {% endif %}
+            </div>
+
+            <!-- Right Block -->
+            <div class="right-block">
+                <!-- Name -->
+                <div class="words">
+                    <!-- {{ sauce.name }} -->
+                    <h1>{{ sauce }}</h1>
+
+                    <!-- Description -->
+                    <p style="text-align:left;">{{ sauce.description }}</p>
+
+                </div>
+
+                <!-- Quantity -->
+                <!-- Add Buttons -->
+                <div class="add_content">
+                <!-- Buttons -->
+                <div class="content_btn">
+                    <button onclick="Add(-1, '{{ sauce.name }}_amount')">-</button>
+                    <p id="{{ sauce.name }}_amount">{{ amount }}</p>
+                    <button onclick="Add(+1, '{{ sauce.name }}_amount')">+</button>
+                </div>
+            </div>
+            </div>
+
+            <div class="mid-block">
+                <!-- Price -->
+                    <h6>Price</h6>
+                    <p id="{{ sauce.name }}_price">${{ sauce.price }}</p>
+            </div>
+
+
+        </div>
+    {% endfor %}
+
+
+
+
+
+
+
+
+
+    <!-- Update later -->
+
+    <div style="color:white;">
+        <!-- Total text-->
+        <h2 style="display:flex; justify-content: center;">Total</h2>
+
+        <!-- Seperator -->
+        <div style="background-color:black; width:auto;height: 16px"></div>
+
+        <!-- Total Price -->
+        <h3 id="total" name="total">?</h3>
+    </div>
+
+    <!-- Submit Order -->
+    <form style="display: flex;justify-content: center;flex-direction: column;margin-inline: 250px;margin-bottom: 25px;" method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="real_total" name="real_total" value="None">
+        <input type="hidden" id="cart" name="cart" value="None">
+        <button class="submit-btn" type="submit" onclick="Info()">Submit Order!</button>
+    </form>
+
+
+
+{% endblock %}
+
+{% block Javascript %}
+    <script>
+        // List of Sauces
+        let lst = [{% for sauce, args in cart %}'{{ sauce.name }}',{% endfor %}];
+        let new_lst = new Map();
+        let amount_lst = []
+        let price_lst = []
+
+        // Data info that will be sent back
+        function Info() {
+            // Getting the Sauce
+            for (let sauce = 0; sauce < lst.length; sauce++){
+                // Getting the New Amount
+                for (let amount = 0; amount < amount_lst.length; amount++) {
+                    // Setting our Sauce with the new Amount
+                    if (sauce === amount){
+                        new_lst.set(lst[sauce], +document.getElementById(amount_lst[amount]).innerText)
+                        console.log(new_lst)
+                    }
+                }
+            }
+            document.getElementById('cart').value = JSON.stringify(Object.fromEntries(new_lst))
+        }
+
+        // Add Function
+        function Add(range, sauce) {
+            // Getting Current Amount
+            let num = +document.getElementById(sauce).innerText
+
+
+            // if Above 0, Add or subtract 1
+            if (num + range >= 0 ) {
+                // Adding or Subtracting from current amount
+                num += range
+            }
+
+            // Resetting number if its below zero
+            else {
+                num = 0
+            }
+
+            // Setting Quantity Amount
+            document.getElementById(sauce).innerText = num;
+            Update()
+        }
+
+        // Updating Total Price and Cart Information
+        function Update() {
+            // Total Amount
+            let total = 0
+            amount_lst = []
+            price_lst = []
+
+            // Getting price_lst
+            for (let index = 0; index < lst.length; index++) {
+                // Getting Sauce_price id so we can get the sauce price
+                let sauce_price = lst[index] + '_price'
+
+                // Getting Sauce_Amount so we can get the total amount
+                let sauce_amount = lst[index] + '_amount'
+
+                // If Sauce_price is not None then Push to list
+                if (document.getElementById(sauce_price).innerText !== '$None') {
+                    // Adding Sauce Price to list
+                    price_lst.push(sauce_price);
+                    // Adding The current Sauce to the amount list
+                    amount_lst.push(sauce_amount)
+                }
+
+            }
+
+            // Math
+            for (let index = 0; index < price_lst.length; index++) {
+                let price = +document.getElementById(price_lst[index]).innerText.slice(1)
+                let amount = +document.getElementById(amount_lst[index]).innerText
+
+                total += (price * amount)
+            }
+
+            // Showing in Decimal Form
+            document.getElementById('total').innerText = "$"+total.toFixed(2);
+            document.getElementById('real_total').value = "$"+total.toFixed(2);
+        }
+        Update()
+    </script>
+{% endblock %}

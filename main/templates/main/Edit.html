@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head %}{{ title }}{% endblock %}
+
+{% block styles %}
+    <style>
+    .img {
+        display:flex;
+        width:350px;
+        height:450px;
+        margin-block:auto;
+    }
+    .master {
+        display:flex;
+        justify-content: space-around;
+    }
+    .update{
+        display:block;
+
+
+
+    }
+    .form_data{
+
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% if not form %}
+        <form method="GET">
+            {% csrf_token %}
+            <!-- Getting Sauce Names to Decide from -->
+            <label for="sauce">Sauce</label>
+            <select id="sauce" name="sauce">
+                <option value="None">----</option>
+                <!-- Loading each Sauce -->
+                {% for sauce in menu %}
+                    <option value="{{ sauce }}">{{ sauce }}</option>
+                {% endfor %}
+            </select>
+            <button name="btn" value="edit" type='submit'>Edit Sauce</button>
+            <button name="btn" value="del" type="submit">Delete Sauce</button>
+        </form>
+    {% endif %}
+
+    <!-- Loading Sauce Form for Updates -->
+    {% if form %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Image -->
+            <div class="master">
+                {% if img %}
+                    <img src="{{ img }}" class="img">
+                {% endif %}
+
+                <!-- Form Data -->
+                <div>
+                    {{ form }}
+                    <button type="submit" name="id" value="{{ id }}">Update Sauce</button>
+                </div>
+
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Menu Items | Double Dubs Sauce Co | Where bold flavors meet quality ingredients!{% endblock %}
+
+
+{% block styles %}
+    <style>
+        /* Background */
+
+
+        /* Whole Block */
+        .whole-block {
+            display:flex;
+            flex-wrap:wrap;
+            color:black;
+            justify-content:center;
+            margin-top:10px;
+        }
+
+        /* Sauce Button */
+        .sauce-btn {
+            padding-right:50px;
+            display:flex;
+            flex-direction: column;
+            align-items:center;
+        }
+        .sauce-btn-img {
+            width:150px;
+            height:150px
+        }
+        /* Responsive sizing */
+        @media screen and (max-width:425px){
+            .sauce-btn-img {
+                width:100px;
+                height:100px
+            }
+            .sauce-btn {
+                padding-right:5px;
+            }
+
+        }
+
+
+
+
+    </style>
+{% endblock %}
+
+{% block head %}Select Sauce{% endblock %}
+
+{% block back-arrow %}{% endblock %}
+
+{% block content %}
+    <form method="GET">
+    {% csrf_token %}
+    <div class="whole-block">
+        <!-- Menu Items -->
+        {% for item in sauces %}
+            <!-- {{ item.name }} Sauce -->
+            <div class="sauce-btn">
+                <button name="item" value="{{ item.name }}" style="background-color:transparent; border:3px solid black; padding-block:6px">
+                    <img src="{{ item.image.url }}" class='sauce-btn-img'>
+                </button>
+                <p>${{ item.price }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    </form>
+{% endblock %}
+

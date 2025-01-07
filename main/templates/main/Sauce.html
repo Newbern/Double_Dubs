@@ -1,0 +1,196 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ sauce.name }}{% endblock %}
+
+{% block styles %}
+    <style>
+        /* Background */
+        body, html {
+            background: linear-gradient(180deg, black, olivedrab 10%, olivedrab 90%, black 100%);
+        }
+
+        /* Whole block */
+        .whole-block{
+            display:flex;
+            justify-content: center;
+            margin-top: 10px;
+            margin-inline:25px;
+        }
+        /* Left block */
+        .left-block {
+
+
+        }
+        .img {
+            width: 525px;
+            height: 375px;
+        }
+
+        /* Right block */
+        .right-block{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        .text-right-block{
+            text-align:center;
+            font-family:monospace;
+            width:525px;
+            height:375px
+        }
+
+
+        /* Add button */
+        .add_content {
+            display:flex;
+            flex-direction: column;
+            width:fit-content;
+            text-align:center;
+        }
+        .content_btn {
+            display:flex;
+            background-color:black;
+            color:white;
+            justify-content: space-between;
+            border-radius:1.5rem;
+            padding-inline:5px;
+            gap:25px;
+        }
+        .content_btn button {
+            height:35px;
+            width:35px;
+            border-radius:50%;
+            align-self:center;
+            background-color: olivedrab;
+            color:black;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            border-radius: 16px;
+            border: 3px solid olivedrab;
+            background-color:black;
+            color: white;
+        }
+
+        /* Responsive sizing */
+        @media screen and (max-width:1075px){
+            .img, .text-right-block {
+                width:425px;
+                height:425px;
+            }
+            .text-right-block {
+                font-size: xx-large;
+            }
+        }
+
+        @media screen and (max-width:1000px){
+            .img, .text-right-block{
+                width:350px;
+                height:350px
+            }
+        }
+
+        @media screen and (max-width:750px){
+            .img, .text-right-block {
+                width:250px;
+                height:250px
+            }
+            .text-right-block{
+                font-size: large;
+                height: 225px
+            }
+            .whole-block{
+                flex-direction: column;
+            }
+            .left-block {
+                display:flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Side ways */
+        @media screen and (max-height:520px){
+            body, html {
+                height:fit-content;
+            }
+        }
+
+    </style>
+{% endblock %}
+
+{% block head %}{{ sauce.name }}{% endblock %}
+
+{% block content %}
+    <div>
+
+        <!-- Whole block -->
+        <div class="whole-block">
+            <!-- Left block -->
+            <div class="left-block">
+                <img src="{{ sauce.image.url }}" alt="{{ sauce.name }} Image" class="img">
+            </div>
+
+            <!-- Right block -->
+            <div class="right-block">
+                <!-- Text -->
+                <div class="text-right-block">
+                    <h1>{{ sauce.name }}</h1>
+                    <p>{{ sauce.description }}</p>
+                </div>
+
+                <!-- Buttons -->
+                <div>
+                    <!-- Add Buttons -->
+                    <div class="add_content">
+                            <h3>Add</h3>
+                            <!-- Buttons -->
+                            <div class="content_btn">
+                                <button onclick="Add(-1)">-</button>
+                                <p id="amount">{{ amount}}</p>
+                                <button onclick="Add(+1)">+</button>
+                            </div>
+                            <!-- Submit -->
+                            <form method="POST">
+                                <input type='hidden' name="quantity" id='quantity' value="{{ amount }}">
+                                {% csrf_token %}
+                                <button type="submit" name="sauce" class="submit-btn" value="{{ sauce.name }}">Submit</button>
+                            </form>
+                        </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block Javascript %}
+    <script>
+        // Current Amount
+        let num = {{ amount }}
+        // Add Function
+        function Add(range) {
+
+            // if Above 0, Add or subtract 1
+            if (num + range >= 0 ) {
+                // Adding or Subtracting from current amount
+                num += range
+            }
+
+            // Resetting number if its below zero
+            else {
+                num = 0
+            }
+
+            // Setting Quantity Amount
+            document.getElementById('amount').innerText = num;
+            document.getElementById('quantity').value = num;
+
+        }
+
+    </script>
+{% endblock %}

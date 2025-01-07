@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Add Sauces{% endblock %}
+
+{% block styles %}
+    <style>
+    .update{
+        display:block;
+    }
+    .master {
+        display:flex;
+        flex-direction: column;
+        align-items:flex-start;
+    }
+    </style>
+{% endblock %}
+
+{% block head %}Add New Sauces{% endblock %}
+
+
+{% block content %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="master">
+            {{ form }}
+            <button type="submit">Submit New Sauce</button>
+        </div>
+    </form>
+{% endblock %}

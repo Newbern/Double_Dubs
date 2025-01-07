@@ -1,0 +1,91 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Spice Up Your Profile | Update Your Account{% endblock %}
+
+{% block styles %}
+    <style>
+    /* Background */
+    html, body{
+        {#background: linear-gradient(135deg, black 40%, olivedrab 60%);#}
+        {#height: fit-content;#}
+    }
+
+    /* Content styles */
+    .whole-block{
+        display:flex;
+        justify-content: space-around;
+        color:black;
+    }
+
+    .right-block{
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        border: 3px solid white;
+        inline-size: min-content;
+        padding: 18px;
+    }
+
+    .left-block{
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        border: 3px solid white;
+        inline-size: min-content;
+        padding: 18px;
+    }
+
+    /* Form Style */
+    .update{
+        background: linear-gradient(45deg, green, yellow, blue, red, orange, white);
+        color: black;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+        border-radius: 16px;
+        border: 3px solid olivedrab;
+        background-color:black;
+        color: white;
+    }
+
+    /* Responsive sizing */
+    @media screen and (max-width: 500px){
+        .whole-block{
+            flex-direction: column;
+            align-items: center;
+            justify-content: normal;
+        }
+    }
+
+    @media screen and (min-height:470px){
+        body, html {
+            height:100%
+        }
+    }
+
+    </style>
+{% endblock %}
+
+{% block head %}Account{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display:flex; flex-direction:column">
+            <!-- Whole Block containing both blocks -->
+            <div class="whole-block">
+                <!-- Left Block with User Form -->
+                <div class="left-block">
+                    {{ form1 }}
+                </div>
+                <! -- Right Block with Account Form -->
+                <div class="right-block">
+                    {{ form2 }}
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Submit</button>
+        </div>
+    </form>
+{% endblock %}
