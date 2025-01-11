@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Pay Here{% endblock %}
+
+{% block styles %}
+    <style>
+        .whole-block{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="whole-block">
+        <h1>TOTAL</h1>
+        <h2>${{ total_amount }}</h2>
+        <ul>
+            {% for sauce, amount in cart %}
+                <li>{{ sauce }}: {{ amount }}</li>
+            {% endfor %}
+        </ul>
+        <form method="POST">
+            {% csrf_token %}
+            <button>Order</button>
+        </form>
+    </div>
+{% endblock %}

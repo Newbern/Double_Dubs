@@ -110,7 +110,7 @@
             color: white;
             font-family: monospace;
             text-decoration-line: none;
-            border: gray solid 4px;
+            border: white solid 4px;
             width: 75px;
             text-align: center;
         }
@@ -168,8 +168,6 @@
                 <a class="tabs" href="/cart"><img src="/media/default/sauce_icon.png" width="25"> Cart</a>
             {% endif %}
 
-
-
             <!-- Contact us -->
             <a class="tabs" href="/contact"><img src="/media/default/sauce_icon.png" width="25"> Contact Us</a>
 
@@ -182,8 +180,12 @@
 
                 <!-- Add -->
                 <a class="tabs" href="/add"  ><img src="/media/default/sauce_icon.png" width="25"> Add</a>
+
                 <!-- Edit -->
                 <a class="tabs" href="/edit"><img src="/media/default/sauce_icon.png" width="25"> Edit</a>
+
+                <!-- Advertisement -->
+                <a class="tabs" href="/ads"><img src="/media/default/sauce_icon.png" width="25"> Advertisement</a>
             {% endif %}
 
 
@@ -226,7 +228,6 @@
                 <a href="/"><</a>
             </div>
         {% endblock %}
-        <!-- Page Content -->
         {% block content %}{% endblock %}
     </div>
 

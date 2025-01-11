@@ -1,0 +1,195 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Spice Up Your Profile | Update Your Account{% endblock %}
+
+{% block styles %}
+    <style>
+        /* Whole content */
+        .whole-block{
+            display:flex;
+
+        }
+
+        /* Account Tabs */
+        .account-tabs {
+            display:flex;
+            flex-direction:column;
+            width:400px;
+            height:fit-content;
+            list-style:none;
+            background-color:whitesmoke;
+            margin-left:25px;
+            margin-top:25px;
+            flex:1;
+            justify-content: center;
+            font-family: "Loved By The King", sans-serif;
+            font-size: x-large;
+
+        }
+        .account-tabs li{
+            display:flex;
+            border-bottom-style: ridge;
+            height: 50px;
+            align-items:center;
+            padding-left:15px
+        }
+        .account-tabs li:hover{
+            border-left: 3px solid blue;
+            color:blue;
+        }
+        .account-tabs a{
+            text-decoration: none;
+            color:black;
+        }
+
+        /* DropDown content */
+        .dropdown-content {
+            display:none;
+            height:fit-content;
+            justify-content: center;
+        }
+        .dropdown-content button{
+            display:block;width:100%;
+            border:transparent;
+            background-color:transparent;
+        }
+        .dropdown-content :hover{
+            background-color:lightgray;
+        }
+
+        /* Page content */
+        .page-content {
+            display:flex;
+            flex-direction: column;
+            flex:2;
+            align-items: center;
+            font-family: "Loved By The King", sans-serif;
+            font-size: x-large;
+        }
+
+        /* Username-block */
+        .update {
+            display:flex;
+            flex-direction: column;
+            font-family: "system-ui", sans-serif;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            border-radius: 16px;
+            border: 3px solid olivedrab;
+            background-color:black;
+            color: white;
+        }
+
+        /* Responsive Sizing */
+        @media screen and (max-width: 500px){
+            .whole-block {
+                flex-direction: column-reverse;
+            }
+            .account-tabs{
+                width:auto;
+                margin-inline:25px;
+                display:none;
+
+            }
+            .page-content{
+                display:flex;
+                margin-inline:25px
+            }
+            .dropdown-content{
+                display:flex;
+                margin-inline:25px;
+
+
+            }
+            .dropdown-content button{
+                display:block;width:100%;
+                border:transparent;
+                background-color:transparent;
+            }
+            .dropdown-content :hover{
+                background-color:lightgray;
+            }
+        }
+
+        @media screen and (max-width: 100px){
+            .whole-block {
+                flex-direction: row;
+            }
+            .account-tabs{
+                width:400px;
+                display:flex;
+
+            }
+            .page-content{
+                display:flex;
+                margin-inline:25px
+            }
+            .dropdown-content{
+                display:none;
+                margin-inline:25px;
+
+            }
+
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block head %}Account{% endblock %}
+
+{% block content %}
+    <!-- Whole content -->
+    <div class="whole-block">
+        <!-- Table -->
+        <ul id="account-tabs" class="account-tabs">
+            <li id="my-account-border"><a id="my-account" href="/account/my-account">My Account</a></li>
+            <li id="address-border"><a id="address" href="/account/address">Address Book</a></li>
+            <li id="payment-method-border"><a id="payment-method" href="/account/payment-method">Payment Method</a></li>
+            <li id="history-border"><a id="history" href="/account/history">History</a></li>
+        </ul>
+
+        <!-- Page -->
+        <div id="page-content"  class="page-content">
+
+            <h1>{{ name }}</h1>
+            <form method="POST" style="display:flex; flex-direction: column; border-top-style:ridge;">
+                {% csrf_token %}
+                {{ form }}
+                {{ form2 }}
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+
+        </div>
+
+        <!-- Only when certain sizing dropdown will appear -->
+        <div class="dropdown-content">
+            <button type="submit" id="dropdown-btn" onclick="open_close()"><h1>{{ name }}</h1></button>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block Javascript %}
+    <script>
+        let name = "{{ id_name }}";
+        document.getElementById(name+'-border').style.borderLeft = "3px solid blue";
+        document.getElementById(name).style.color = 'blue';
+
+        function open_close(){
+            if (document.getElementById('page-content').style.display === "none"){
+                document.getElementById('page-content').style.display = "flex"
+                document.getElementById('account-tabs').style.display = "none"
+            }
+            else{
+                document.getElementById('page-content').style.display = "none"
+                document.getElementById('account-tabs').style.display = "flex"
+            }
+        }
+    </script>
+{% endblock %}

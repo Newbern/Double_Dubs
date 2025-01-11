@@ -6,31 +6,66 @@
 
 {% block styles %}
     <style>
-    .img {
-        display:flex;
-        width:350px;
-        height:450px;
-        margin-block:auto;
-    }
-    .master {
-        display:flex;
-        justify-content: space-around;
-    }
-    .update{
-        display:block;
+        /* Whole Block */
+        .whole-block {
+            display:flex;
+            justify-content: space-around;
+        }
+
+        /* Left Block*/
+        .left-block {
+
+        }
+        .left-block img{
+            display:flex;
+            width:350px;
+            height:450px;
+            margin-block:auto;
+            border: 10px double black;
+        }
+
+        /* Right Block */
+        .right-block{
+            font-family: "Loved By The King", sans-serif;
+            font-size:x-large;
+        }
+
+        /* Form class */
+        .update{
+            display:block;
+            font-family:system-ui;
+            font-size: medium;
+        }
+
+        @media screen and (max-width: 425px){
+            .whole-block{
+                flex-direction: column;
+                align-items:center;
+                margin-inline:15px
+            }
+            .left-block img{
+                width:100%;
+                height:100%;
+            }
+            .right-block button{
+                margin-top:15px;
+                width:100%
+            }
+            .update{
+                width:100%
+            }
+        }
 
 
 
-    }
-    .form_data{
-
-    }
     </style>
 {% endblock %}
 
 {% block content %}
+
+    <!-- Table -->
     {% if not form %}
-        <form method="GET">
+        <form method="GET" style="font-family:'Loved By The King', sans-serif; font-size:large; display:flex">
             {% csrf_token %}
             <!-- Getting Sauce Names to Decide from -->
             <label for="sauce">Sauce</label>
@@ -50,14 +85,18 @@
     {% if form %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- Image -->
-            <div class="master">
-                {% if img %}
-                    <img src="{{ img }}" class="img">
-                {% endif %}
+            <!-- Whole Block -->
+            <div class="whole-block">
 
-                <!-- Form Data -->
-                <div>
+                <!-- Left block-->
+                <div class="left-block">
+                    {% if img %}
+                        <img src="{{ img }}">
+                    {% endif %}
+                </div>
+
+                <!-- Right block -->
+                <div class="right-block">
                     {{ form }}
                     <button type="submit" name="id" value="{{ id }}">Update Sauce</button>
                 </div>

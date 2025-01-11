@@ -16,13 +16,13 @@
 
 # Add Sauce
     * Only Staff can access this
-    - also make this mobile responsive
+    * also make this mobile responsive
     - Finish Front-end
 
 # Edit Sauce
     * Also allows Sauce to be Deleted
     * Only Staff can access this
-    - also make this mobile responsive
+    * also make this mobile responsive
     - Finish Front-end
 
 # Account Settings
@@ -55,7 +55,7 @@
     * List of sauce with image
     * Total Price of Each sauce
     - Confirm & Continue to Payment Page
-    - Delete button for Sauce/ Transition effect
+    * Delete button for Sauce
     * Quantity & edit of Sauce
 
 # Payment Method
@@ -87,63 +87,87 @@
     * Make this loop back to un-registered home page
 
 
----- ORDER LIST ------
-
-* Learn how to set up apis in Django
-- Get there Business Email and Password for Emailing
-
-* (Email Api Setup)
-- Forgot Password (Email Api Setup)
+---- LEARNING LIST ------
+- Cash-app API
 - Data Sheet Api (Google Sheet API) (Email API Setup)
 
-- Research on Cash-app api
-- Find out how they want there payment
-
-
-- Payment api
-
-
-
-
-
-
 ------ QUESTIONS FOR COMPANY -------
+- Banking router number and checking account
+- Menu Sauce Text & Images
+- Account
+- Side bar Separators
+- No Cash app (Debit or Credit and VISA is best)
+- There is a API fee for (2.5% - 3.5%)
 
------------TODAY'S LIST ----------------
+----------- FRESHENING UP LIST ----------------
 
-# Start with Main Page
-    - Erase old Image, add Logo Image
-    - Curved Letters above
-    - make Circular
+# Base
+    - Change Back Arrow Button Color
+    - Background hover on side buttons
+    - Responsive tabs (make height just a bit bigger)
 
-# Sauces
-    - Place Frame around image
-    - White Background
-    - Add Button change colors
-    - Change Font
+# Advertisement
+    - Add Mass Email Tab
+    - Add Mass Employ Email Tab
 
 # Account
-    - Make Tabs or links?
-    - Make Separate forms to submit
-    - Add Cash-app tab (for information purposes)
-    - Change Font
-    - Make Responsive
+    - Change Backend Model Code for other models in the same model..(Ex. main/models.py/Account -> Account/models.py/Account)??
+    - Email Exist Change email? (May cause errors trying to sign in)
 
 # Cart
-    - Change Background color
-    - Change Text color
-    - Change Button colors
-    - Erases Separators
     - Make Submit Button (Links to new url that deals with Cash-app api)
-
-# Add & Edit
-    - Freshin Up
     - Make Responsive
 
-# Base add new tab
-    - Create Mass Email tab
-        - Add Mass Email Tab
-        - Add Mass Employ Email Tab
+# Login
+    - Forgot Password (Email Api Setup)
+
+------------- API LIST ----------------------
+- Create Payment
+    - Make sure to add
+        * Refrence_id
+        * Make Sure new Cards work
+            - Create Model to store in Database
+
+    - Refunds
+        - Create a Payment list
+            - Sort in DESC order
+            - Last_4 card number
+
+        - See if it refunds the whole account
+        - See if it refunds the card
+
+- This Moment
+    - Finish connecting the refunds
+        - connect to the refund api
+
+    - Add Card Payments (Multiple Can be Added)
+
+
+
+
+* Checkout Method
+- Refund Method
+- Payment List
+- Card on File
+- Orders History/ Id
+
+
+
+
+--------------- API TODO LIST ----------
+
+- Create Payment website
+    * Card Token (Must Receive from front-end side)
+    * Payment ID (In Backend) # DON'T SHOW
+    - Card Selector
+    - Card Page
+    - Enable / Disable button
+        - Selects None
+        - Just Refreshes to Payment method website
+
+
+
+
 
 
 

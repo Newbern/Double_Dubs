@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from main.models import *
-from main.form import AccountForm, AccountUserForm, NewSauceForm
+from main.form import NewSauceForm
 from Double_Dubs import settings
 import json
+from square.client import Client
+from uuid import uuid1 as uuid
+# Setting up Client access through Squareup
+client = Client(access_token=settings.SQUARE_ACCESS_TOKEN, environment=settings.SQUARE_ENVIRONMENT)
 
 
 # Sauce Items/Menu
@@ -12,7 +15,7 @@ def menu(request):
     menu = Sauce.objects.all()
 
     if request.method == 'GET':
-        # Checking to See if a Sauce was Selected
+        # Loading Sauce Button
         if request.GET.get('item'):
 
             # Getting Selected Sauce
@@ -22,11 +25,11 @@ def menu(request):
             # Getting User Data
             if request.user.is_authenticated:
                 user = Account.objects.filter(username=request.user).first()
-            else:
 
+            # Loading Fake User Sauces Url
+            else:
                 # Loading Fake Specs Sauce Item
                 return render(request, 'main/Sauce.html', {'user': None, 'amount': 0, 'sauce': menu})
-
 
             # Getting the amount from Users cart
             for item in user.cart:
@@ -41,6 +44,7 @@ def menu(request):
             # Loading Specs Sauce Item
             return render(request, 'main/Sauce.html', {'user': user, 'amount': amount, 'sauce': menu})
 
+        # Loading Main Page
         else:
             # Loading Menu
             return render(request, 'main/Menu.html', {'sauces': menu})
@@ -67,34 +71,6 @@ def menu(request):
         return redirect("home")
 
 
-# Account
-def account(request):
-    if request.method == 'GET':
-        # Getting Account Info
-        form1 = AccountUserForm(instance=request.user)
-        form2 = AccountForm(instance=Account.objects.get(username=request.user))
-
-    elif request.method == 'POST':
-        # Getting Account
-        account = Account.objects.get(username=request.user)
-
-        # Retrieving data from forms
-        form1 = AccountUserForm(request.POST, instance=request.user)
-        form2 = AccountForm(request.POST, instance=account)
-
-        # Checking to see if data is in correctly
-        if form1.is_valid() and form2.is_valid():
-            # Saving data
-            form1.save()
-            form2.save()
-
-        # Returning to Home Page
-        return redirect('home')
-
-
-    return render(request, 'main/Account.html', {'form1': form1, 'form2': form2})
-
-
 # Cart
 def cart(request):
     # Loading Cart data
@@ -119,6 +95,7 @@ def cart(request):
 
         # Sauce cart List
         lst = []
+        max_quantity = []
         # Going Through Users Cart
         for sauce in list(cart):
             # Going Through Sauce Items
@@ -127,9 +104,10 @@ def cart(request):
                 if sauce_item.name == sauce:
                     # Adding  Sauce to Cart
                     lst.append((sauce_item, cart[sauce]))
+                    max_quantity.append((sauce_item.name, sauce_item.instock))
 
         # Loading Cart
-        return render(request, 'main/Cart.html', {'cart': lst})
+        return render(request, 'main/Cart.html', {'cart': lst, 'max_quantity': max_quantity})
 
     # Posting Cart data
     elif request.method == 'POST':
@@ -139,42 +117,125 @@ def cart(request):
 
         # Updating Database
         info = Account.objects.filter(username=request.user).first()
-        info.cart.update(cart)
+        info.cart = cart
         info.save()
 
-        # Factory Shopping Message
-        message = ""
-        for sauce in cart:
-            message += f"{sauce}: {cart[sauce]}\n"
-        message += f"---------------------\nTotal: {total}\n"
-
-        # Getting User
-        user = User.objects.filter(username=request.user).first()
-
-        # Getting Email Address from Account
-        if user.email is not None:
-
-            # Checking to see if First and Last Name is Used
-            if user.first_name or user.last_name != "":
-                name = " ".join([user.first_name, user.last_name])
-
-            # If First & Last Name isn't used, then use Email
-            else:
-                name = user.email
-
-            # Sending Email
-            send_mail(
-                f"REPLY TO: {name}",
-                message,
-                settings.EMAIL_HOST_USER,
-                [user.email, settings.EMAIL_HOST_USER],
-                fail_silently=False
-            )
+        return redirect('checkout')
 
 
+# Checkout
+def checkout(request):
+    # Getting Account data
+    account = Account.objects.get(username=request.user)
+    cart = account.cart
+
+    # Getting Sauces with amount
+    lst = [[item, account.cart[item]] for item in account.cart]
+
+    # Collecting all Sauces for Price
+    sauce_items = Sauce.objects.all()
+    # Getting Total
+    total = []
+    # Going through account.cart
+    for item in cart:
+        # Going through Sauce Items
+        for sauce in sauce_items:
+            # when Sauce Item is in the account.cart
+            if item == sauce.name:
+                # Getting the price for this specific sauce
+                price = sauce.price * cart[item]
+                # Appending to the total list
+                total.append(price)
+    # Summing up all the prices together
+    total = sum(total)
+
+    if request.method == "GET":
+        # Loading Payment
+        return render(request, 'main/Checkout.html', {"total_amount": total, "cart": lst})
+
+    elif request.method == "POST":
+
+        # Payment Method
+        results = client.payments.create_payment(
+            body={
+                "idempotency_key": str(uuid),
+                "source_id": "cnon:card-nonce-ok",
+                "amount_money": {
+                    "amount": int(str(total).replace('.', "")),
+                    "currency": "USD"
+                },
+                "reference_id": f"{User.objects.filter(username=request.user).first().email}",
+            }
+        )
+
+        # Sending Email Recept
+        if results.is_success():
+            print(results.body)
+
+            # Email Recept Message
+            message = "".join([f"{sauce}: {cart[sauce]}\n" for sauce in cart]) + f"---------------------\nTotal: {total}\n"
+
+            # Getting User
+            user = User.objects.filter(username=request.user).first()
+
+            # Getting Email Address & Sending Email
+            if user.email is not None:
+
+                # Checking to see if First and Last Name is Used
+                if user.first_name or user.last_name != "":
+                    # Separating First & Last Name
+                    name = " ".join([user.first_name, user.last_name])
+
+                # If First & Last Name isn't used, then use Email
+                else:
+                    name = user.email
+
+                # Sending Email
+                send_mail(
+                    f"REPLY TO: {name}",
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [user.email, settings.EMAIL_HOST_USER],
+                    fail_silently=False
+                )
+
+        elif results.is_error():
+            print(results.errors)
+
+        return redirect('home')
 
 
-        return redirect('cart')
+# Payment Look up
+def payment_lookup(request):
+    pass
+
+
+# Refunds
+def refund(request):
+    # Getting list of payments
+    result = client.payments.list_payments()
+
+    if result.is_success():
+        result = result.body['payments']
+        for values in result:
+            amount = values['amount_money']['amount']
+            amount = '.'.join([str(amount)[0:-2], str(amount)[-2:]])
+
+
+            print(values['id'], amount, values['card_details']['card']['last_4'], values['order_id'])
+
+
+
+    elif result.is_error():
+        print(result.errors)
+
+    breakpoint()
+
+
+
+
+
+
 
 
 # Superuser & Staff Users Adding New Sauce
@@ -234,7 +295,9 @@ def edit(request):
                     img = data.image.url
 
                 # Reloading Edit Page
-                return render(request, 'main/Edit.html', {'menu': menu, 'title': f"Updating {sauce}", 'form': NewSauceForm(instance=data), 'img': img, 'id': data.id})
+                return render(request, 'main/Edit.html',
+                              {'menu': menu, 'title': f"Updating {sauce}", 'form': NewSauceForm(instance=data),
+                               'img': img, 'id': data.id})
 
             else:
                 # Only Reload Select Sauce from Edit.html

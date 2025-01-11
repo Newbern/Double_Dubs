@@ -18,59 +18,69 @@
             text-align:center;
             margin-inline:125px;
             margin-bottom: 15px;
-            border: 5px solid black;
             position: relative;
+
         }
+
         /* Left block */
         .left-block {
             margin-right:50px;
         }
-        .img {
+        .left-block img{
             display:flex;
             width:270px;
-            height: 270px;
+            height:270px;
         }
 
         /* Middle block */
         .mid-block {
+        }
+        .mid-text {
+            width:500px;
+            font-family: "Loved By The King", sans-serif;
+            font-size: x-large;
+                }
+
+        /* Right block*/
+        .right-block {
             display:flex;
             flex-direction: column;
             align-items: flex-end;
             position:absolute;
-            right:125px
-        }
+            right:125px;
+            font-family: "Loved By The King", sans-serif;
+            font-size: x-large;
 
-        /* Right block*/
-        .right-block {
-            justify-content: space-evenly;
-
-        }
-        .words {
-            width:500px;
         }
 
         /* Add Button */
-        .add_content {
-            display:flex;
-            flex-direction: column;
-            width:fit-content;
-            text-align:center;
-        }
-        .content_btn {
+        .add-btn {
             display:flex;
             background-color:black;
             justify-content: space-between;
             border-radius:1.5rem;
             padding-inline:5px;
             gap:25px;
+            width:fit-content;
         }
-        .content_btn button {
+        .add-btn button {
             height:35px;
             width:35px;
             border-radius:50%;
             align-self:center;
             background-color:olivedrab;
             color:black;
+        }
+
+        /* Delete Button */
+        .del-btn button {
+            display:flex;
+            background-color: transparent;
+            border:none;
+            color:blue;
+        }
+        .del-btn button:hover{
+            text-decoration-line: underline;
         }
 
         /* Submit Button */
@@ -80,6 +90,32 @@
             background-color:black;
             color: white;
         }
+
+
+        @media screen and (max-width: 425px){
+            .whole-block{
+                width:100%;
+                flex-direction: column;
+                margin-inline:25px
+            }
+            .left-block{
+                width:50%;
+                height:50%
+            }
+            .left-block img{
+                width:100%;
+                height:100%;
+            }
+            .mid-block{
+                width:50%;
+                height:50%
+            }
+            .mid-text{
+                width: 100%;
+                height:100%
+            }
+        }
+
     </style>
 {% endblock %}
 
@@ -87,8 +123,17 @@
 
 {% block content %}
     {% for sauce, amount in cart %}
+        <!-- {{ sauce.name }} -->
         <!-- Whole Block -->
-        <div class="whole-block">
+        <div class="whole-block" id="{{ sauce.name }}">
+
+            <!-- Getting {{ sauce.name }} Max Limit Instock -->
+            {% for sauce_name, sauce_limit in max_quantity %}
+                {% if sauce_name == sauce.name %}
+                    <input type="hidden" id="{{ sauce.name }}_limit" value="{{ sauce_limit }}">
+                {% endif %}
+            {% endfor %}
+
             <!-- Left Block -->
             <div class="left-block">
                 <!-- Image -->
@@ -100,10 +145,10 @@
                 {% endif %}
             </div>
 
-            <!-- Right Block -->
-            <div class="right-block">
+            <!-- Middle Block -->
+            <div class="mid-block">
                 <!-- Name -->
-                <div class="words">
+                <div class="mid-text">
                     <!-- {{ sauce.name }} -->
                     <h1>{{ sauce }}</h1>
 
@@ -114,20 +159,27 @@
 
                 <!-- Quantity -->
                 <!-- Add Buttons -->
-                <div class="add_content">
-                <!-- Buttons -->
-                <div class="content_btn">
-                    <button onclick="Add(-1, '{{ sauce.name }}_amount')">-</button>
+                <div style="width:fit-content">
+                    <p id='{{ sauce.name }}_message' style="display:none; font-family:'Loved By The King', sans-serif; color:red">Max!</p>
+                    <div class="add-btn">
+                    <button onclick="Add(-1, '{{ sauce.name }}')">-</button>
                     <p id="{{ sauce.name }}_amount">{{ amount }}</p>
-                    <button onclick="Add(+1, '{{ sauce.name }}_amount')">+</button>
+                    <button onclick="Add(+1, '{{ sauce.name }}')">+</button>
                 </div>
-            </div>
+                </div>
+
+                <!-- Delete Button -->
+                <div class="del-btn">
+                    <button class="del-btn" type="submit" onclick="Delete('{{ sauce.name }}')">Delete</button>
+                </div>
+
             </div>
 
-            <div class="mid-block">
+            <!-- Right Block -->
+            <div class="right-block">
                 <!-- Price -->
-                    <h6>Price</h6>
-                    <p id="{{ sauce.name }}_price">${{ sauce.price }}</p>
+                <h6>Price</h6>
+                <p id="{{ sauce.name }}_price">${{ sauce.price }}</p>
             </div>
 
 
@@ -135,32 +187,20 @@
     {% endfor %}
 
 
-
-
-
-
-
-
-
-    <!-- Update later -->
-
-    <div style="color:white;">
+    <!-- Total Price -->
+    <div style="display:flex; color:white;justify-content: center; margin-bottom:25px">
         <!-- Total text-->
-        <h2 style="display:flex; justify-content: center;">Total</h2>
-
-        <!-- Seperator -->
-        <div style="background-color:black; width:auto;height: 16px"></div>
-
+        <h2>Subtotal (2 Items):</h2>
         <!-- Total Price -->
-        <h3 id="total" name="total">?</h3>
+        <h2 id="total" name="total" style="padding-left:15px">?</h2>
     </div>
 
-    <!-- Submit Order -->
+    <!-- Submit Order Button -->
     <form style="display: flex;justify-content: center;flex-direction: column;margin-inline: 250px;margin-bottom: 25px;" method="POST">
         {% csrf_token %}
         <input type="hidden" id="real_total" name="real_total" value="None">
         <input type="hidden" id="cart" name="cart" value="None">
-        <button class="submit-btn" type="submit" onclick="Info()">Submit Order!</button>
+        <button class="submit-btn" type="submit" onclick="Info()">Proceed to checkout</button>
     </form>
 
 
@@ -184,7 +224,6 @@
                     // Setting our Sauce with the new Amount
                     if (sauce === amount){
                         new_lst.set(lst[sauce], +document.getElementById(amount_lst[amount]).innerText)
-                        console.log(new_lst)
                     }
                 }
             }
@@ -193,8 +232,11 @@
 
         // Add Function
         function Add(range, sauce) {
+            // Sauce's Current Quantity Amount
+            let sauce_amount = sauce +"_amount"
+
             // Getting Current Amount
-            let num = +document.getElementById(sauce).innerText
+            let num = +document.getElementById(sauce_amount).innerText
 
 
             // if Above 0, Add or subtract 1
@@ -208,8 +250,36 @@
                 num = 0
             }
 
+            // Seeing if number is above max of what is instock
+            if (num >= +document.getElementById(sauce+"_limit").value){
+                num = +document.getElementById(sauce+"_limit").value
+                document.getElementById(sauce +'_message').style.display = 'block'
+            }
+
+            else {
+                document.getElementById(sauce +'_message').style.display = 'none'
+            }
+
             // Setting Quantity Amount
-            document.getElementById(sauce).innerText = num;
+            document.getElementById(sauce_amount).innerText = num;
+            Update()
+        }
+
+        // Delete Sauce
+        function Delete(name){
+            console.log(name, lst)
+
+            // Getting Element inside of list
+            const index = lst.indexOf(name)
+            // Deleting Element
+            if (index !== -1){
+                lst.splice(index, 1)
+            }
+
+
+
+            document.getElementById(name).style.display = "none"
+            console.log(name, lst)
             Update()
         }
 
@@ -237,7 +307,6 @@
                 }
 
             }
-
             // Math
             for (let index = 0; index < price_lst.length; index++) {
                 let price = +document.getElementById(price_lst[index]).innerText.slice(1)

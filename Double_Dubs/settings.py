@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main.apps.MainConfig',
+    'Account.apps.AccountConfig',
     'register.apps.RegisterConfig',
 
     'rest_framework',
-    'api'
+    'square'
 
 
 ]
@@ -128,6 +129,14 @@ EMAIL_HOST_USER = 'CalebsNewbern@gmail.com'
 EMAIL_HOST_PASSWORD = 'qvqy gvao qyxt ykxo'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# Squareup setup
+SQUARE_APP_ID = "sandbox-sq0idb-FwWpo-LhcJJlnRc_kDjvQA"
+SQUARE_API_URL = "https://connect.squareupsandbox.com/v2/payments"
+SQUARE_ACCESS_TOKEN = "EAAAlxVsjXq6H0gvQ2bstB2mO6kubExComu19fR6ciz0qPrMwvyuRjvlAM3lHva9"
+SQUARE_LOCATION_ID = 'L4PJ5KN2BDPG5'
+SQUARE_ENVIRONMENT = "sandbox"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
