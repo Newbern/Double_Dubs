@@ -4,10 +4,6 @@
 
 {% block styles %}
     <style>
-        /* Background */
-        body, html {
-            background: linear-gradient(180deg, black, olivedrab 10%, olivedrab 90%, black 100%);
-        }
 
         /* Whole block */
         .whole-block{
@@ -19,11 +15,11 @@
         /* Left block */
         .left-block {
 
-
         }
-        .img {
+        .left-block img {
             width: 525px;
             height: 375px;
+            border: 10px double black;
         }
 
         /* Right block */
@@ -32,22 +28,23 @@
             flex-direction:column;
             align-items:center;
         }
-        .text-right-block{
+        .text-right-block {
             text-align:center;
-            font-family:monospace;
+            font-family:"Loved By The King", sans-serif;
+            font-size: x-large;
             width:525px;
-            height:375px
+            height:375px;
         }
 
 
         /* Add button */
-        .add_content {
+        .buttons {
             display:flex;
             flex-direction: column;
             width:fit-content;
             text-align:center;
         }
-        .content_btn {
+        .add-btn {
             display:flex;
             background-color:black;
             color:white;
@@ -56,7 +53,7 @@
             padding-inline:5px;
             gap:25px;
         }
-        .content_btn button {
+        .add-btn button {
             height:35px;
             width:35px;
             border-radius:50%;
@@ -75,7 +72,7 @@
 
         /* Responsive sizing */
         @media screen and (max-width:1075px){
-            .img, .text-right-block {
+            .left-block img, .text-right-block {
                 width:425px;
                 height:425px;
             }
@@ -85,14 +82,14 @@
         }
 
         @media screen and (max-width:1000px){
-            .img, .text-right-block{
+            .left-block img, .text-right-block{
                 width:350px;
                 height:350px
             }
         }
 
         @media screen and (max-width:750px){
-            .img, .text-right-block {
+            .left-block img, .text-right-block {
                 width:250px;
                 height:250px
             }
@@ -129,7 +126,7 @@
         <div class="whole-block">
             <!-- Left block -->
             <div class="left-block">
-                <img src="{{ sauce.image.url }}" alt="{{ sauce.name }} Image" class="img">
+                <img src="{{ sauce.image.url }}" alt="{{ sauce.name }} Image">
             </div>
 
             <!-- Right block -->
@@ -141,25 +138,29 @@
                 </div>
 
                 <!-- Buttons -->
-                <div>
-                    <!-- Add Buttons -->
-                    <div class="add_content">
-                            <h3>Add</h3>
-                            <!-- Buttons -->
-                            <div class="content_btn">
-                                <button onclick="Add(-1)">-</button>
-                                <p id="amount">{{ amount}}</p>
-                                <button onclick="Add(+1)">+</button>
-                            </div>
-                            <!-- Submit -->
-                            <form method="POST">
-                                <input type='hidden' name="quantity" id='quantity' value="{{ amount }}">
-                                {% csrf_token %}
-                                <button type="submit" name="sauce" class="submit-btn" value="{{ sauce.name }}">Submit</button>
-                            </form>
-                        </div>
-                </div>
+                <div class="buttons">
+                    <!-- Add Button -->
+                    <div>
+                        <!-- Text -->
+                        <h3 style="font-family:'Loved By The King', sans-serif">Add</h3>
+                        <p id='message' style="display:none; font-family:'Loved By The King', sans-serif; color:red">Max!</p>
 
+                        <!-- Buttons -->
+                        <div class="add-btn">
+                            <button onclick="Add(-1)">-</button>
+                            <p id="amount">{{ amount}}</p>
+                            <button onclick="Add(+1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <form method="POST">
+                        <input type='hidden' name="quantity" id='quantity' value="{{ amount }}">
+                        {% csrf_token %}
+                        <button type="submit" name="sauce" class="submit-btn" value="{{ sauce.name }}">Submit</button>
+                    </form>
+
+                </div>
             </div>
         </div>
 
@@ -172,6 +173,7 @@
     <script>
         // Current Amount
         let num = {{ amount }}
+        let max = {{ sauce.instock }}
         // Add Function
         function Add(range) {
 
@@ -184,6 +186,15 @@
             // Resetting number if its below zero
             else {
                 num = 0
+            }
+
+            // If Num is at the Max instock
+            if (num >= max){
+                num = max
+                document.getElementById('message').style.display = "block"
+            }
+            else {
+                document.getElementById('message').style.display = "none"
             }
 
             // Setting Quantity Amount

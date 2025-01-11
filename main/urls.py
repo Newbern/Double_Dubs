@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 from . import views
+from Account import urls as account_urls
 
 
 urlpatterns = [
     path('', views.menu, name='home'),
-    path('account/', views.account, name='account'),
     path('cart/', views.cart, name='cart'),
     path('add/', views.add, name='add'),
     path('edit/', views.edit, name='edit'),

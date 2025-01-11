@@ -108,42 +108,59 @@
 
 
 ------ QUESTIONS FOR COMPANY -------
-
+- Cash app Account info
+- Menu Sauce Text & Images
+- Account
+- Side bar Separators
 -----------TODAY'S LIST ----------------
 
-# Start with Main Page
-    - Erase old Image, add Logo Image
-    - Curved Letters above
-    - make Circular
+# Base
+    - Change Back Arrow Button Color
+    * Create Mass Email tab (Make this a drop-Down?)
+        - Add Mass Email Tab
+        - Add Mass Employ Email Tab
+
+    - Background hover on side buttons
+    - Responsive tabs (make height just a bit bigger)
+
+* Start with Main Page
+    * Sauce Image (Stay)
+        x Curved Letters above
+    * Change font
+    * make Image Circular
+    * undo borders
+    * Add Button hover
+
 
 # Sauces
-    - Place Frame around image
-    - White Background
-    - Add Button change colors
-    - Change Font
+    * Place Frame around image
+    * White Background
+        x Add Button change colors
+    * Change Font
+    * Add how many are instock (When Out of stock Black Out Add Button)
 
 # Account
-    - Make Tabs or links?
-    - Make Separate forms to submit
-    - Add Cash-app tab (for information purposes)
+    # Links
+    * Make Separate forms to submit
+    * Add Cash-app tab (for information purposes)
     - Change Font
     - Make Responsive
+    * No Borders
 
 # Cart
-    - Change Background color
-    - Change Text color
+    x Change Background color
+    x Change Text color
+    - Change Font
     - Change Button colors
     - Erases Separators
+    - Add Delete Button
     - Make Submit Button (Links to new url that deals with Cash-app api)
+    - (If stop amount to the max of what is in stock)
 
 # Add & Edit
     - Freshin Up
     - Make Responsive
 
-# Base add new tab
-    - Create Mass Email tab
-        - Add Mass Email Tab
-        - Add Mass Employ Email Tab
 
 
 

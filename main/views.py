@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from main.models import *
-from main.form import AccountForm, AccountUserForm, NewSauceForm
+from main.form import NewSauceForm
 from Double_Dubs import settings
 import json
 
@@ -12,7 +11,7 @@ def menu(request):
     menu = Sauce.objects.all()
 
     if request.method == 'GET':
-        # Checking to See if a Sauce was Selected
+        # Loading Sauce Button
         if request.GET.get('item'):
 
             # Getting Selected Sauce
@@ -22,11 +21,11 @@ def menu(request):
             # Getting User Data
             if request.user.is_authenticated:
                 user = Account.objects.filter(username=request.user).first()
-            else:
 
+            # Loading Fake User Sauces Url
+            else:
                 # Loading Fake Specs Sauce Item
                 return render(request, 'main/Sauce.html', {'user': None, 'amount': 0, 'sauce': menu})
-
 
             # Getting the amount from Users cart
             for item in user.cart:
@@ -41,6 +40,7 @@ def menu(request):
             # Loading Specs Sauce Item
             return render(request, 'main/Sauce.html', {'user': user, 'amount': amount, 'sauce': menu})
 
+        # Loading Main Page
         else:
             # Loading Menu
             return render(request, 'main/Menu.html', {'sauces': menu})
@@ -65,34 +65,6 @@ def menu(request):
 
         # Going back to Menu
         return redirect("home")
-
-
-# Account
-def account(request):
-    if request.method == 'GET':
-        # Getting Account Info
-        form1 = AccountUserForm(instance=request.user)
-        form2 = AccountForm(instance=Account.objects.get(username=request.user))
-
-    elif request.method == 'POST':
-        # Getting Account
-        account = Account.objects.get(username=request.user)
-
-        # Retrieving data from forms
-        form1 = AccountUserForm(request.POST, instance=request.user)
-        form2 = AccountForm(request.POST, instance=account)
-
-        # Checking to see if data is in correctly
-        if form1.is_valid() and form2.is_valid():
-            # Saving data
-            form1.save()
-            form2.save()
-
-        # Returning to Home Page
-        return redirect('home')
-
-
-    return render(request, 'main/Account.html', {'form1': form1, 'form2': form2})
 
 
 # Cart

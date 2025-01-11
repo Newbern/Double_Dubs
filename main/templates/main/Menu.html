@@ -15,6 +15,8 @@
             color:black;
             justify-content:center;
             margin-top:10px;
+            font-family: "Loved By The King", sans-serif;
+            font-size: x-large;
         }
 
         /* Sauce Button */
@@ -24,10 +26,20 @@
             flex-direction: column;
             align-items:center;
         }
-        .sauce-btn-img {
-            width:150px;
-            height:150px
+        .sauce-btn button {
+            background-color:transparent;
+            border-color: transparent;
+            padding-block:6px
         }
+        .sauce-btn button:hover {
+            background-color:whitesmoke;
+        }
+        .sauce-btn img {
+            width:150px;
+            height:150px;
+            border-radius:100%
+        }
+
         /* Responsive sizing */
         @media screen and (max-width:425px){
             .sauce-btn-img {
@@ -58,8 +70,14 @@
         {% for item in sauces %}
             <!-- {{ item.name }} Sauce -->
             <div class="sauce-btn">
-                <button name="item" value="{{ item.name }}" style="background-color:transparent; border:3px solid black; padding-block:6px">
-                    <img src="{{ item.image.url }}" class='sauce-btn-img'>
+                <button name="item" value="{{ item.name }}">
+
+                    <!-- Text -->
+                    <p>{{ item.name }}</p>
+
+                    <!-- Image -->
+                    <img src="{{ item.image.url }}">
+
                 </button>
                 <p>${{ item.price }}</p>
             </div>

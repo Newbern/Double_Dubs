@@ -1,0 +1,99 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Spice Up Your Profile | Update Your Account{% endblock %}
+
+{% block styles %}
+    <style>
+        /* Whole content */
+        .whole-content{
+            display:flex;
+
+        }
+
+
+        /* Account Tabs */
+        .account-tabs {
+            display:flex;
+            flex-direction:column;
+            width:400px;
+            list-style:none;
+            background-color:whitesmoke;
+            margin-left:25px;
+            margin-top:25px;
+            flex:1;
+            justify-content: center;
+
+        }
+        .account-tabs li{
+            display:flex;
+            border-bottom-style: ridge;
+            height: 50px;
+            align-items:center;
+            padding-left:15px
+        }
+        .account-tabs li:hover{
+            border-left: 3px solid blue;
+            color:blue;
+        }
+        .account-tabs a{
+            text-decoration: none;
+            color:black;
+        }
+
+        /* Page content */
+        .page-content {
+            display:flex;
+            flex-direction: column;
+            flex:2;
+            align-items: center;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            border-radius: 16px;
+            border: 3px solid olivedrab;
+            background-color:black;
+            color: white;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block head %}Account{% endblock %}
+
+{% block content %}
+    <!-- Whole content -->
+    <div class="whole-content">
+        <!-- Table -->
+        <ul class="account-tabs">
+            <li id="my-account-border"><a id="my-account" href="/account/my-account">My Account</a></li>
+            <li id="address-border"><a id="address" href="/account/address">Address Book</a></li>
+            <li id="payment-method-border"><a id="payment-method" href="/account/payment-method">Payment Method</a></li>
+            <li id="history-border"><a id="history" href="/account/history">History</a></li>
+        </ul>
+
+        <!-- Page -->
+        <div class="page-content">
+            <h1>{% block page-name %}{% endblock %}</h1>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form }}
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block Javascript %}
+    <script>
+        let name = "{% block name %}{% endblock %}"
+        document.getElementById(name+'-border').style.borderLeft = "3px solid blue";
+        document.getElementById(name).style.color = 'blue';
+    </script>
+{% endblock %}
