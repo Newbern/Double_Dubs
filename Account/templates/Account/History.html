@@ -1,5 +1,28 @@
 {% extends 'Account/base.html' %}
 
 {% block content2 %}
+    <div style="display:flex; flex-direction:column">
 
+        <table>
+            <thead>
+                <tr>
+                    <th>Sauces</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Going Through Orders -->
+                {% for order in lst %}
+                    <!-- All Items In Cart -->
+                    <tr>
+
+                        {% for sauce in order.cart %}
+                            <td>{{ sauce }}</td>
+                        {% endfor %}
+                    </tr>
+
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

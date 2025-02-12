@@ -39,7 +39,7 @@
 
             <!-- Collecting List -->
         <div style="display:flex">
-            <select id="dropdown">
+            <select id="dropdown" onchange="this.form.submit()">
                 {% for name, lst, item in orders %}
                     <option value="{{ lst }}"
                             {% if forloop.first %}

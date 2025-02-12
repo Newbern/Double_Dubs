@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "double-dubs",
+  "private_key_id": "d9cc99eb4087ed1127e23aa451c559e0e9304be8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDNqIUAygZgEduU\nkqG8iKbkPfuhfY0xmgIwq0raw2m2yhtGW6Ak4ssjRrOaNikst6fag6UkVxGMcbnu\n4FvINJQJ6RtXI7oFP7yMqLZ3HY4/NjMNmYx7S0ren9P1ba7MK4MWdPdE7nw/+5Iq\n6jczVF+gDYYsDeA5scgFOpttcqxbmGIhHjbEb3c/IOXt3gg2upLTk2AkgqjF7JxZ\n5huS397xHwtsWhqtFeBl4lhGoJXwqhh8tR4zRUT9qVfJMHR3RaBPIDfg3MWFd1+E\nFcfaHRTzmywG7dim6a730TloId5HEk7BSo/OVys+NNsDQ8VW7Bgd4VrtwyujNa4A\nMuM5wUglAgMBAAECggEAASqkTH+Y3ykixXo6dCMTTUaju4QGjcI5onSKSWjj299U\nHcdNxn/J1rKjOKv3elM1Xsox4N2kkhcgDqCTrLRNpau+lbU0bCyzIVogpNbUVHv2\neKyHDTj9XPtrnKAJZouVpAY4U9oFduhyqQ8ojoA7RaFmAjB29eTSBWOSd6G3pBJb\n24SQIl6YCRJnPRln9G/2q9u0tUPUy0wseBFRKQaP0lc/nisnenYJHKOafOFY4cfJ\nb8Hy+URyeDLLFrmuDMJIjk6BTLAiypOR8b1MOOoG3bV5XSk91VE9Y+E+pUoFkIcD\nwUKX7SqxZj6d15T5YC8qiWyqDCDQ/ZBc702osCmQIQKBgQDrd8gT4MPhhIlKzPLe\ng2QTaFivJ6HfHyR4cTNLigCKmir4X9JAi5fg+Cnql0ywUWGoF8O6loUxJDD/GWsw\nF4DkxUN5QieWBWMLS3L7ISWAmDb+AlYATRCNS3aKeUGuiyAeEyI1UsOQ7ETN7Lkr\nZKfqxmtxRhKNYnhn5/LUVL30xQKBgQDfl1CFwUDpdLzsNq7ev0XlSZIaMmRyy3lH\nuVR8ISp+7g954oI950r9EfvTyUPgtsCg6ZV4H00VpJvJF+nraQH5+FigL+HJ892R\nd/7uUdg5z7Vjd1mzH8fF1IvnNKgp2NBsvyIzDSP/l6am3HpylcnKzfCCVKGPA2Er\nd7vYnZD74QKBgG+oFCtA6QH2nDfpKb3UJk+BqpQcQgkQtnWakE1gulL/OiMfJQ9Q\nYovegdnpNwdg/+L6qei/2Zbs54MAJbDfZFKXLCDC+wyLr2S6uWJWXHc3NtSKfQeV\ng6TMxQBy8W94L5mzTwRkI7KEJzhS6ZenGm0c+/Px23hJ2njDJ4YCTTVVAoGAXs99\nF5qg+d3Elq2BbXbSHq4Zw/4GVh8t6FoQFyrBKF2uNlL0Q2emhrVvgZjgrZMRD6q8\n9NjhCQJqBNWdHXPDoMnMWvCy374HAD5P3aLa+3i2Q91CLhCV16+PO5U6kbQcfWB3\nEgrKbwFRa4QmcBxQGy1EhR95+njGZXY6M1ptNkECgYEAkl29/w9dsNvZMDZWghSY\nCilQVEcrSaudaDHwl4ALD+xRk6irkPHpCUHVJAmtaFHY8CSIUC8R83RuHm0vaSu9\nFwNGO9jCCmVkwnC5JTblA4rtgMHoTlIsEdzudooIJXhQucZooBLLUMosh5TekC1K\nemiiqh6RSoC+nsl0E5PUBik=\n-----END PRIVATE KEY-----\n",
+  "client_email": "double-dubs-bot@double-dubs.iam.gserviceaccount.com",
+  "client_id": "107385676096375848530",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/double-dubs-bot%40double-dubs.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

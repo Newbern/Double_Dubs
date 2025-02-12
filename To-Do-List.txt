@@ -36,8 +36,8 @@
 # Purchase Settings
     * Card Info
     - Finish Front-end
-    - Refund Payments
-    - History of Order Ids
+    * Refund Payments
+    * History of Order Ids
 
 # Data Sheet
     - Google Sheet API
@@ -53,7 +53,7 @@
 
 # Cart
     - Finish Front-end
-    - Erase Card AFTER purchased
+    * Erase Cart AFTER purchased
     * List of sauce with image
     * Total Price of Each sauce
     * Confirm & Continue to Payment Page
@@ -89,9 +89,6 @@
     * Make this loop back to un-registered home page
 
 
----- LEARNING LIST ------
-- Data Sheet Api (Google Sheet API) (Email API Setup)
-
 ------ QUESTIONS FOR COMPANY -------
 - Banking router number and checking account
 - Menu Sauce Text & Images
@@ -103,7 +100,7 @@
 ----------- FRESHENING UP LIST ----------------
 
 # Base
-    - Change Back Arrow Button Color
+    * Change Back Arrow Button Color
     - Background hover on side buttons
     - Responsive tabs (make height just a bit bigger)
 
@@ -123,66 +120,63 @@
 # Login
     - Forgot Password (Email Api Setup)
 
-------------- API LIST ----------------------
-
-
-    - Refunds
-        - Create a Payment list
-            - Sort in DESC order
-            - Last_4 card number
-
-        - See if it refunds the whole account
-        - See if it refunds the card
-
-- This Moment
-    - Finish connecting the refunds
-        - connect to the refund api
-
-    - Add Card Payments (Multiple Can be Added)
-
-
-
-- Refund Method
-- Orders History/ Id
-
-
----------------- TO DO LIST -------------------
-
-- Cart Subtotal item count
-
-- Refund Button
-- Add Payment method needed when buying
--
-
-
-
 
 --------------- TO DO LIST ----------------------
 
-- Refund
-    * Fix Refund Indecator
-    * X-out Refund Button
-
 - Orders
-    - Add Completed Button
-    - Add Incompleted Button
+    - Fix First Selected When Getting USer
     - Random order id?
+    - Add Address?
+    - Add Phone?
+    - Add Amount of Sauces?
 
-- Backend
-    - Fix Order.username (on_delete)  # Can you Erase?
-    - Change Status to Completed_status
-
-- Cart
-    - Fix to Make Redirect to Purches method
+- History
+    - Needs to see (Tabel or DropDown?)
+        - Cart & Items
+        - Total
+        - Payment Card
 
 - Account
     - Fix to make User set account settings
+    - Make Payment Method Have A Message
+    - History
+        - Add All User Orders And Place in A Scroll Bar that they Click and it SHows Data on The Right
 
 - Google Sheet Data
-    ...
+    - Finish Making a Type of Order for Every User
+    - Make a Graph that floats
+        - They Need to see
+            - Money
+            - Highest & Lowest Month
+            - payemnt method
+            - First & Last Name
+            - address
+            - phone
+            - email
+            - cart
 
 - Advertisement
-    ...
+    - Add Image Block to Insert the image
+        - Make the Image Show Live??
+        - Multiple Images? or max of 5?
+
+    - Add Text Box
+    - Add Header
+    - Add Check box of People
+        - Separate to
+            - Employees
+            - customers
+            - all
+    - FaceBook link?
+
+- Contact Us
+    - Front End
+        - Add Text Box
+        - Add Button
+        - Add 2 Images to Be loaded
+    - Back End
+        - Send Email With Images
+
 
 
 

@@ -190,7 +190,7 @@
     <!-- Total Price -->
     <div style="display:flex; color:white;justify-content: center; margin-bottom:25px">
         <!-- Total text-->
-        <h2>Subtotal (2 Items):</h2>
+        <h2 style="display:flex">Subtotal (<p id="amount"></p>):</h2>
         <!-- Total Price -->
         <h2 id="total" name="total" style="padding-left:15px">?</h2>
     </div>
@@ -318,6 +318,13 @@
             // Showing in Decimal Form
             document.getElementById('total').innerText = "$"+total.toFixed(2);
             document.getElementById('real_total').value = "$"+total.toFixed(2);
+
+            // Getting Amount of Items in Cart
+            let item_amount = 0
+            for (let item = 0; item < amount_lst.length; item++){
+                item_amount += +document.getElementById(amount_lst[item]).innerText
+            }
+            document.getElementById('amount').innerText = item_amount
         }
         Update()
     </script>

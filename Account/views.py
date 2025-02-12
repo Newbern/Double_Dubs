@@ -280,8 +280,11 @@ def payment_request(request):
 
 
 def history(request):
+    # Getting all the Users Orders
+    customer_id = Payment_method.objects.filter(username=request.user).first().customer_id
+
+    lst = reversed([item for item in Order.objects.filter(customer_id=customer_id)])
 
 
-
-    return render(request, 'Account/History.html', {"id_name": 'history',"name": 'History'})
+    return render(request, 'Account/History.html', {"id_name": 'history',"name": 'History', 'lst': lst})
 

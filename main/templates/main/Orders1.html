@@ -1,0 +1,119 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block styles %}
+    <style>
+        .whole-block {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .left-block {
+            display:flex;
+            flex-direction: column;
+            align-items:center
+        }
+
+        .radio-block {
+            display:flex;
+            flex-direction: column;
+            align-items:center
+        }
+
+        .right-block{
+            display:flex;
+            flex-direction: column;
+            align-items:center;
+            background-color: red;
+            width: 100%;
+            height: 100%
+        }
+
+        .btn-block{
+            display:flex;
+            justify-content: space-between;
+            margin-inline:10px;
+            margin-top:5px
+        }
+
+        .submit-btn {
+
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <!-- Whole Block -->
+    <div class="whole-block">
+        <!-- Left Block -->
+        <div class="left-block">
+
+            <!-- Radio Buttons -->
+            <form class="radio-block" method="get">
+                {% csrf_token %}
+                <!-- Order Label -->
+                <label for="radio-block">Orders</label>
+
+                <!-- Incomplete Radio Button -->
+                <label>Incomplete <input type="radio" name="radio-btn" value="Incomplete" onchange="this.form.submit()" {% if selected == "Incomplete" %}checked{% endif %}></label>
+
+                <!-- Complete Radio Button -->
+                <label>Complete <input type="radio" name="radio-btn" value="Complete" onchange="this.form.submit()" {% if selected == "Complete" %}checked{% endif %}></label>
+
+                <!-- All Radio Button -->
+                <label>All <input type="radio" name="radio-btn" value="All" onchange="this.form.submit()" {% if selected == "All" %}checked{% endif %}></label>
+            </form>
+
+
+            <!-- Select List -->
+            <form method="get">
+            {% csrf_token %}
+                <div style="display:flex">
+                    <select name="dropdown" id="dropdown" onchange="this.form.submit()">
+                        {% for name, lst in orders %}
+                            <option value="{{ lst.order_id }}"
+                                    {% if lst.order_id == result.order_id %}
+                                    selected
+                                    {% endif %}>
+                                {{ name }} ---
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- Right Block -->
+        <div style="width:25%; height:375px">
+            <div class="right-block">
+                <!-- Header -->
+                <h1>{{ name }}</h1>
+                {% if result is not None %}
+                    <!-- Order Id -->
+                    <p>order ID: {{ result.order_id }}</p>
+                    <!-- Last 4 Numbers -->
+                    <p>card last4: {{ result.card_last_4 }}</p>
+                    <!-- Total Payment -->
+                    <h4>${{ result.total_payment }}</h4>
+                    <!-- Cart Data -->
+                    <ul>
+                        {% for i in result.cart %}
+                            <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <!-- Submit Buttons -->
+            <form class="btn-block" method="post">
+                {% csrf_token %}
+                <input name="order_id" type="hidden" value="{{ result.order_id }}">
+                <button name="btn" type="submit" value="Complete">Complete</button>
+                <button name="btn" type="submit" value="Incomplete">Incomplete</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

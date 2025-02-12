@@ -118,11 +118,15 @@ def cart(request):
         cart = json.loads(request.POST.get('cart'))
         total = request.POST.get('real_total')
 
+        # Updating Google Sheets Database
+        google_data(request)
+
         # Updating Database
         info = Account.objects.filter(username=request.user).first()
         info.cart = cart
         info.save()
 
+        # Returning to checkout
         return redirect('checkout')
 
 
@@ -158,6 +162,13 @@ def checkout(request):
         return render(request, 'main/Checkout.html', {"total_amount": total, "cart": lst})
 
     elif request.method == "POST":
+        # Making sure there is a Payment method
+        card = Account.objects.filter(username=request.user).first().payment_method
+
+        # Checking if Card exist or is selected
+        if not Payment_method.objects.filter(username=request.user, last_4=card).first():
+            return redirect('payment_method')
+
         # Getting Payment Method from account
         customer = Payment_method.objects.get(username=request.user, last_4=account.payment_method)
 
@@ -176,12 +187,9 @@ def checkout(request):
 
         # Sending Email Recept
         if results.is_success():
-            print(results.body)
-
             # Getting User & Account
             user = User.objects.filter(username=request.user).first()
             account = Account.objects.filter(username=request.user).first()
-
 
             # Sending Email if Email Address Exists
             if user.email is not None:
@@ -216,7 +224,7 @@ def checkout(request):
 
             order = Order.objects.create(order_id=new_order_id,
                                          customer_id=customer.customer_id,
-                                         card_id=customer.card_id,
+                                         payment_id=results.body['payment']['id'],
                                          card_last_4=customer.last_4,
                                          total_payment=total,
                                          cart=account.cart
@@ -233,6 +241,28 @@ def checkout(request):
 
     # Redirecting to Home Page
     return redirect('home')
+
+
+# Google Sheet Data
+def google_data(request):
+    from main.Google_Sheet_Data.Google_Format import Sheet
+
+    # Settings up Google Sheet Api & Keys
+    keys = "https://docs.google.com/spreadsheets/d/1o7wB5wcYQlidWSw5oFoLr6RE4bZ9uSe35Sa3bxcEIas/edit?gid=0#gid=0"
+    api = 'main/info.json'
+    Sheet = Sheet(api=api, key=keys)
+
+
+
+    # Persons Name
+    Sheet.write('A1', f"{request.user.username}", True)
+
+    # Collecting Order
+    # Locating Cell
+    abc, row, col = Sheet.locate('A2')
+    order = Account.objects.filter(username=request.user).first().cart
+    for item in order:
+        Sheet.write(f"{abc[row]}{col}", item, False)
 
 
 # Payment Look up
@@ -324,73 +354,110 @@ def edit(request):
 
 # Superuser & Staff User Orders Status
 def orders(request):
+    # Collecting all Orders
     orders = Order.objects.all()
 
     # Getting Separate List
-    all_lst = []
-    incomplete_lst = []
-    complete_lst = []
-
-    # Collecting all Orders
-    for persons_order in orders:
-
-        # Getting User
-        name = Payment_method.objects.filter(customer_id=persons_order.customer_id).first().username
-
-        # Arranging Cart Data
-        cart = f"Total: ${persons_order.total_payment}\n"
-        for sauce in persons_order.cart:
-
-            cart += f"\n{sauce}: {persons_order.cart[sauce]}"
-
-        # Appending To Complete List
-        if persons_order.status is True:
-            complete_lst.append((name, cart, persons_order))
-
-        # Appending to Incomplete List
-        elif persons_order.status is False:
-            incomplete_lst.append((name, cart, persons_order))
-
-        # Appending Everything The All List
-        all_lst.append((name, cart, persons_order))
+    lst = [(Payment_method.objects.filter(customer_id=customer_order.customer_id).first().username, customer_order) for customer_order in orders]
+    complete_lst = [order for order in lst if order[1].completed_status]
+    incomplete_lst = [order for order in lst if not order[1].completed_status]
 
     if request.method == "GET":
+        radio_btn = request.GET.get('radio-btn')
 
-        # Loading Order Web Page
-        return render(request, 'main/Orders.html', {'orders': reversed(all_lst), 'selected':"All"})
+        # Getting Radio Button Response
+        if radio_btn == 'Incomplete':
+            lst = incomplete_lst
+        elif radio_btn == 'Complete':
+            lst = complete_lst
+        else:
+            radio_btn = "All"
+
+        # Getting DropDown Value
+        dropdown = request.GET.get('dropdown')
+        try:
+            if dropdown:
+                result = Order.objects.filter(order_id=int(dropdown)).first()
+                name = Payment_method.objects.filter(customer_id=result.customer_id).first().username
+            else:
+                result = Order.objects.filter(order_id=lst[0][1].order_id).first()
+                name = Payment_method.objects.filter(customer_id=result.customer_id).first().username
+
+        except IndexError:
+            result = None
+            name = None
+
+        return render(request, 'main/Orders1.html', {'orders': lst, 'selected': radio_btn, 'result': result, 'name': name})
 
     elif request.method == "POST":
-        lst_type = request.POST.get('lst-type')
+        # Getting Button Value
+        button = request.POST.get('btn')
+        order_id = int(request.POST.get('order_id'))
 
-        if lst_type == "Complete":
-            lst = complete_lst
-        elif lst_type == "Incomplete":
-            lst = incomplete_lst
-        elif lst_type == "All":
-            lst = all_lst
+        # Getting Order Id
+        order = Order.objects.filter(order_id=order_id).first()
 
-        return render(request, 'main/Orders.html', {'orders': reversed(lst), 'selected':lst_type})
+        # Updating Status
+        if button == "Complete":
+            order.status = True
+        elif button == "Incomplete":
+            order.status = False
+
+        order.save()
+
+        return redirect('orders')
 
 
-# ----------- LOOK AT REFUNDS --------------
-# Refunds
+# Superuser & Staff User Refund Payments
 def refund(request):
 
+    # Getting Order Id
     if request.method == "GET":
         try:
-            order_id = int(request.GET.get('order-id'))
-            order = Order.objects.get(order_id=order_id)
+            # Getting Order ID
+            order = Order.objects.get(order_id=int(request.GET.get('order-id')))
 
+            # Getting Name of the Order ID
             name = Payment_method.objects.filter(customer_id=order.customer_id).first().username
 
-        except:
+        except (ValueError, TypeError):
             order = name = None
 
         # Loading Refund Page
         return render(request, 'main/Refund.html', {"order": order, "name": name})
 
+    # Refunding Payment
     elif request.method == "POST":
-        pass
+        try:
+            # Getting Order Id
+            order = Order.objects.filter(order_id=int(request.POST.get('order-id'))).first()
+
+            # Refunding Payment
+            result = client.refunds.refund_payment(
+                body={
+                    "idempotency_key": str(uuid()),
+                    "amount_money": {
+                        "amount": int(str(order.total_payment).replace('.', '')),
+                        "currency": "USD",
+                    },
+                    "payment_id": order.payment_id,
+                }
+            )
+
+            if result.is_success:
+                print(result.body)
+            elif result.errors:
+                print(result.errors)
+
+            # Changing Refund Status
+            order.refund_status = True
+
+            order.save()
+
+        except (ValueError, TypeError):
+            pass
+
+        return redirect('refund')
 
 
 

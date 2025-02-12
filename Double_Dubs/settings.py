@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ['192.168.1.136', 'localhost']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,7 +42,9 @@ INSTALLED_APPS = [
     'register.apps.RegisterConfig',
 
     'rest_framework',
-    'square'
+    'square',
+    'gspread',
+    'oauth2client'
 
 
 ]

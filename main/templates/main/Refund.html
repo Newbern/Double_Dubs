@@ -4,12 +4,19 @@
 
 {% block styles %}
     <style>
+        /* Whole Block */
         .whole-block{
             display:flex;
             flex-direction: row;
             justify-content: space-evenly;
         }
 
+        /* Left Block */
+        .left-block{
+
+        }
+
+        /* Right Block */
         .right-block{
             display: flex;
             flex-direction: column;
@@ -24,7 +31,7 @@
             align-items: center;
         }
 
-
+        /* Refund Indicator */
         .refund-indicator {
             width: 15px;
             height: 15px;
@@ -38,15 +45,14 @@
             {% endif %});
         }
 
+        /* Submit button */
         .submit-btn{
             margin-top:5px;
             font-family:'Loved By The King';
             font-size: x-large;
         }
 
-
-
-
+        /* Button container for line */
         .button-wrapper {
             position: relative;
             display: inline-block;
@@ -73,23 +79,31 @@
         <!-- Left Block -->
         <div class="left-block">
             <form method="get">
-            {% csrf_token %}
-            <label>
-                Search Order_id
-                <input type="number" name="order-id">
-                <button type="submit">Get</button>
-
-            </label>
-        </form>
+                {% csrf_token %}
+                <!-- Search Order -->
+                <label>
+                    Search Order_id
+                    <input type="number" name="order-id" placeholder="Order Id Number">
+                    <button type="submit">Get</button>
+                </label>
+            </form>
         </div>
 
-        <!-- Right Block -->
-        <!-- And Button -->
+        <!-- Right Block Container-->
         <div>
+            <!-- Refund Indicator -->
             <div style="display:flex; align-items: center">
                 <div class="refund-indicator"></div>Refund Status
             </div>
+
+            <!-- Post Form -->
             <form method="post">
+                {% csrf_token %}
+
+                <!-- Order Id -->
+                <input type="hidden" name="order-id" value="{{ order.order_id }}">
+
+                <!-- Right Block -->
                 <div class="right-block">
                     {% if order %}
                         <!-- Getting Customer Name -->
@@ -107,8 +121,8 @@
                 </div>
 
                 <!-- Refund Button -->
-                    <!-- Simple Button Wrapper to store the Line in -->
-                    <div class="button-wrapper">
+                <!-- Simple Button Wrapper to store the Line in -->
+                <div class="button-wrapper">
                         <!-- Checking refund status -->
                          {% if order.refund_status %}
                             <div class="line"></div>
@@ -124,9 +138,5 @@
 
             </form>
         </div>
-
-
-
-
     </div>
 {% endblock %}
