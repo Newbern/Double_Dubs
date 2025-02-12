@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<script>
+    const card = await payments.card();
+await card.attach('#card-container');
+const result = await card.tokenize();
+
+if (result.status === 'OK') {
+    const cardToken = result.token;
+    console.log("Card Token:", cardToken);
+}
+
+</script>
+</body>
+</html>

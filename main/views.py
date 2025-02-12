@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
+
+from Account.models import *
 from main.models import *
 from main.form import NewSauceForm
 from Double_Dubs import settings
 import json
 from square.client import Client
 from uuid import uuid1 as uuid
+
 # Setting up Client access through Squareup
 client = Client(access_token=settings.SQUARE_ACCESS_TOKEN, environment=settings.SQUARE_ENVIRONMENT)
 
@@ -146,6 +149,7 @@ def checkout(request):
                 price = sauce.price * cart[item]
                 # Appending to the total list
                 total.append(price)
+
     # Summing up all the prices together
     total = sum(total)
 
@@ -154,17 +158,19 @@ def checkout(request):
         return render(request, 'main/Checkout.html', {"total_amount": total, "cart": lst})
 
     elif request.method == "POST":
+        # Getting Payment Method from account
+        customer = Payment_method.objects.get(username=request.user, last_4=account.payment_method)
 
         # Payment Method
         results = client.payments.create_payment(
             body={
-                "idempotency_key": str(uuid),
-                "source_id": "cnon:card-nonce-ok",
+                "idempotency_key": str(uuid()),
+                "source_id": customer.card_id,
                 "amount_money": {
                     "amount": int(str(total).replace('.', "")),
                     "currency": "USD"
                 },
-                "reference_id": f"{User.objects.filter(username=request.user).first().email}",
+                "customer_id": customer.customer_id,
             }
         )
 
@@ -172,14 +178,16 @@ def checkout(request):
         if results.is_success():
             print(results.body)
 
-            # Email Recept Message
-            message = "".join([f"{sauce}: {cart[sauce]}\n" for sauce in cart]) + f"---------------------\nTotal: {total}\n"
-
-            # Getting User
+            # Getting User & Account
             user = User.objects.filter(username=request.user).first()
+            account = Account.objects.filter(username=request.user).first()
 
-            # Getting Email Address & Sending Email
+
+            # Sending Email if Email Address Exists
             if user.email is not None:
+                # Email Recept Message
+                message = "".join(
+                    [f"{sauce}: {cart[sauce]}\n" for sauce in cart]) + f"---------------------\nTotal: ${total}\n"
 
                 # Checking to see if First and Last Name is Used
                 if user.first_name or user.last_name != "":
@@ -199,43 +207,37 @@ def checkout(request):
                     fail_silently=False
                 )
 
+            # Creating Order History
+            # Getting the newest order_id
+            try:
+                new_order_id = sorted([order.order_id for order in Order.objects.all()])[-1] + 1
+            except IndexError:
+                new_order_id = 1
+
+            order = Order.objects.create(order_id=new_order_id,
+                                         customer_id=customer.customer_id,
+                                         card_id=customer.card_id,
+                                         card_last_4=customer.last_4,
+                                         total_payment=total,
+                                         cart=account.cart
+                                         )
+            # Saving Order
+            order.save()
+
+            # Deleting Current Card
+            account.cart = {}
+            account.save()
+
         elif results.is_error():
             print(results.errors)
 
-        return redirect('home')
+    # Redirecting to Home Page
+    return redirect('home')
 
 
 # Payment Look up
 def payment_lookup(request):
     pass
-
-
-# Refunds
-def refund(request):
-    # Getting list of payments
-    result = client.payments.list_payments()
-
-    if result.is_success():
-        result = result.body['payments']
-        for values in result:
-            amount = values['amount_money']['amount']
-            amount = '.'.join([str(amount)[0:-2], str(amount)[-2:]])
-
-
-            print(values['id'], amount, values['card_details']['card']['last_4'], values['order_id'])
-
-
-
-    elif result.is_error():
-        print(result.errors)
-
-    breakpoint()
-
-
-
-
-
-
 
 
 # Superuser & Staff Users Adding New Sauce
@@ -318,3 +320,84 @@ def edit(request):
 
                 # Returning to Home Page
                 return redirect('home')
+
+
+# Superuser & Staff User Orders Status
+def orders(request):
+    orders = Order.objects.all()
+
+    # Getting Separate List
+    all_lst = []
+    incomplete_lst = []
+    complete_lst = []
+
+    # Collecting all Orders
+    for persons_order in orders:
+
+        # Getting User
+        name = Payment_method.objects.filter(customer_id=persons_order.customer_id).first().username
+
+        # Arranging Cart Data
+        cart = f"Total: ${persons_order.total_payment}\n"
+        for sauce in persons_order.cart:
+
+            cart += f"\n{sauce}: {persons_order.cart[sauce]}"
+
+        # Appending To Complete List
+        if persons_order.status is True:
+            complete_lst.append((name, cart, persons_order))
+
+        # Appending to Incomplete List
+        elif persons_order.status is False:
+            incomplete_lst.append((name, cart, persons_order))
+
+        # Appending Everything The All List
+        all_lst.append((name, cart, persons_order))
+
+    if request.method == "GET":
+
+        # Loading Order Web Page
+        return render(request, 'main/Orders.html', {'orders': reversed(all_lst), 'selected':"All"})
+
+    elif request.method == "POST":
+        lst_type = request.POST.get('lst-type')
+
+        if lst_type == "Complete":
+            lst = complete_lst
+        elif lst_type == "Incomplete":
+            lst = incomplete_lst
+        elif lst_type == "All":
+            lst = all_lst
+
+        return render(request, 'main/Orders.html', {'orders': reversed(lst), 'selected':lst_type})
+
+
+# ----------- LOOK AT REFUNDS --------------
+# Refunds
+def refund(request):
+
+    if request.method == "GET":
+        try:
+            order_id = int(request.GET.get('order-id'))
+            order = Order.objects.get(order_id=order_id)
+
+            name = Payment_method.objects.filter(customer_id=order.customer_id).first().username
+
+        except:
+            order = name = None
+
+        # Loading Refund Page
+        return render(request, 'main/Refund.html', {"order": order, "name": name})
+
+    elif request.method == "POST":
+        pass
+
+
+
+
+
+
+
+
+
+

@@ -2,3 +2,26 @@
 
 {% block name %}payment-method{% endblock %}
 {% block page-name %}Payment Methods{% endblock %}
+
+
+{% block content2 %}
+    <div style="display:flex; flex-direction: row">
+        <label for="card-list"></label>
+        <select id="card-list" name="card-list">
+            {% for i in lst %}
+                {% if i.last_4 == None %}
+                    <option value=None>----</option>
+                {% else %}
+                    <option value="{{ i.last_4 }}"
+                            {% if option_selected == i.last_4 %}
+                                selected
+                            {% endif %}
+                    >**** {{ i.last_4 }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <a href="/account/add-card/" style="margin-inline: 15px">Add Card</a>
+        <button name='submit-btn' value='Delete' type="submit">Delete Card</button>
+        <button name='submit-btn' value='Set' type="submit">Set</button>
+    </div>
+{% endblock %}

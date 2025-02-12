@@ -42,10 +42,7 @@ class AddressForm(forms.ModelForm):
 class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment_method
-        fields = ["customer_id", "cardholder_name", "expiration_month", "expiration_year"]
+        fields = ["customer_id"]
         widgets = {
-            'customer_id': forms.TextInput(attrs={'class': 'update', 'placeholder': 'Customer ID'}),
-            'cardholder_name': forms.TextInput(attrs={'class': 'update', 'placeholder': 'Cardholder Name'}),
-            'expiration_month': forms.TextInput(attrs={'class': 'update', 'placeholder': 'Month'}),
-            'expiration_year': forms.TextInput(attrs={'class': 'update', 'placeholder': 'Year'}),
+            'customer_id': forms.TextInput(attrs={'class': 'update', 'placeholder': 'Customer ID'})
         }

@@ -157,17 +157,19 @@
             <h1>{{ name }}</h1>
             <form method="POST" style="display:flex; flex-direction: column; border-top-style:ridge;">
                 {% csrf_token %}
-                {{ form }}
-                {{ form2 }}
+                {% block content2 %}
+                    {{ form }}
+                    {{ form2 }}
+                {% endblock %}
                 <!-- Submit Button -->
-                <button type="submit" class="submit-btn">Submit</button>
+                <button name='submit-btn' value="Submit" type="submit" class="submit-btn">Submit</button>
             </form>
 
         </div>
 
         <!-- Only when certain sizing dropdown will appear -->
         <div class="dropdown-content">
-            <button type="submit" id="dropdown-btn" onclick="open_close()"><h1>{{ name }}</h1></button>
+            <button type="submit" id="dropdown-btn" onclick="open_close()" style="font-size:x-large">{{ name }}</button>
         </div>
 
     </div>

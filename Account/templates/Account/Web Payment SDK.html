@@ -1,183 +1,45 @@
-<!doctype html>
-<html>
-  <head>
-      <!--<link href="/app.css" rel="stylesheet" />-->
-      <script
-              type="text/javascript"
-              src="https://sandbox.web.squarecdn.com/v1/square.js">
-      </script>
-      <script>
-          // Getting API Requirements
-          const appId = "sandbox-sq0idb-FwWpo-LhcJJlnRc_kDjvQA";
-          const locationId = "L4PJ5KN2BDPG5";
+<script type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
 
-          // Setting up Card Payment Container
-          async function initializeCard(payments) {
-              const card = await payments.card();
-              await card.attach('#card-container');
-              return card;
-          }
+<div id="card-container"></div>
+<button id="get-nonce">Get Card Nonce</button>
+<p id="nonce-output"></p>
+<a href="/account/payment-method/">Go Back</a>
 
-          // Creating Payment
-          async function createPayment(token, verificationToken) {
-              const body = JSON.stringify({
-                  locationId,
-                  sourceId: token,
-                  verificationToken,
-                  idempotencyKey: window.crypto.randomUUID(),
-              });
+<script>
+    // Getting Api requirements
+    async function initializeSquare() {
+        // Application Id
+        const payments = Square.payments("sandbox-sq0idb-FwWpo-LhcJJlnRc_kDjvQA", "sandbox");
+        // Setting up Card
+        const card = await payments.card();
+        await card.attach("#card-container");
 
-              // Retrieving Payment response/ Creating Payment
-              let amount = 1
-              const paymentResponse = await fetch('payment-request/', {
-                  method: 'post',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body
-              });
+        // Getting Card Nonce Token
+        document.getElementById("get-nonce").addEventListener("click", async () => {
+            try {
+                // Getting Token
+                const result = await card.tokenize();
 
-              // If The Payment was successful
-              if (paymentResponse.ok) {
-                  return paymentResponse.json();
-              }
+                // If Card nonce Token was Succesfull
+                if (result.status === "OK") {
+                    document.getElementById("nonce-output").innerText = `Nonce: ${result.token}`;
+                    console.log("Card Nonce:", result.token);
 
-              // If the Payment was an Error
-              const errorBody = await paymentResponse.text();
-              throw new Error(errorBody);
-          }
+                    // Send nonce to Django backend
+                    fetch("/account/add-card/", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ nonce: result.token })
+                    })
+                        .then(response => response.json())
+                        .then(data => console.log("Server Response:", data));
+                }
+            }
+            catch (error) {
+                console.error("Error generating nonce:", error);
+            }
+        });
+    }
 
-          // Getting Card Payment Token
-          async function tokenize(paymentMethod) {
-              const tokenResult = await paymentMethod.tokenize();
-
-              // If there was no Errors getting the token
-              if (tokenResult.status === 'OK') {
-                  return tokenResult.token;
-              }
-              // Failed at Retrieving the Token from Payment Method
-              else {
-                  let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
-                  if (tokenResult.errors) {
-                      errorMessage += ` and errors: ${JSON.stringify(
-                          tokenResult.errors,
-                      )}`;
-                  }
-                  throw new Error(errorMessage);
-              }
-          }
-
-          // Required in SCA Mandated Regions: Learn more at https://developer.squareup.com/docs/sca-overview
-          // Strong Customer Authentication
-          async function verifyBuyer(payments, token) {
-              const verificationDetails = {
-                  amount: '100',
-                  billingContact: {
-                      givenName: 'John',
-                      familyName: 'Doe',
-                      email: 'john.doe@square.example',
-                      phone: '3214563987',
-                      addressLines: ['123 Main Street', 'Apartment 1'],
-                      city: 'London',
-                      state: 'LND',
-                      countryCode: 'GB',
-                  },
-                  currencyCode: 'GBP',
-                  intent: 'CHARGE',
-              };
-
-              const verificationResults = await payments.verifyBuyer(
-                  token,
-                  verificationDetails,
-              );
-              return verificationResults.token;
-          }
-
-          // status is either SUCCESS or FAILURE;
-          function displayPaymentResults(status) {
-              const statusContainer = document.getElementById(
-                  'payment-status-container',
-              );
-              if (status === 'SUCCESS') {
-                  statusContainer.classList.remove('is-failure');
-                  statusContainer.classList.add('is-success');
-              }
-              else {
-                  statusContainer.classList.remove('is-success');
-                  statusContainer.classList.add('is-failure');
-              }
-
-              statusContainer.style.visibility = 'visible';
-          }
-
-          // Loading Status to WebPage & Making Payment
-          document.addEventListener('DOMContentLoaded', async function () {
-              if (!window.Square) {
-                  throw new Error('Square.js failed to load properly');
-              }
-
-              let payments;
-              try {
-                  payments = window.Square.payments(appId, locationId);
-              }
-              catch {
-                  const statusContainer = document.getElementById(
-                      'payment-status-container',
-                  );
-                  statusContainer.className = 'missing-credentials';
-                  statusContainer.style.visibility = 'visible';
-                  return;
-              }
-
-              // Testing Card Given
-              let card;
-              try {
-                  card = await initializeCard(payments);
-              }
-              catch (e) {
-                  console.error('Initializing Card failed', e);
-                  return;
-              }
-
-              async function handlePaymentMethodSubmission(event, card) {
-                  event.preventDefault();
-
-                  // Disable the button & Getting card Token, While Creating a Payment
-                  try {
-                      // disable the submit button as we await tokenization and make a payment request.
-                      cardButton.disabled = true;
-                      const token = await tokenize(card);
-                      const verificationToken = await verifyBuyer(payments, token);
-                      const paymentResults = await createPayment(
-                          token,
-                          verificationToken,
-                      );
-                      displayPaymentResults('SUCCESS');
-
-                      console.debug('Payment Success', paymentResults);
-                  }
-                  catch (e) {
-                      cardButton.disabled = false;
-                      displayPaymentResults('FAILURE');
-                      console.error(e.message);
-                  }
-              }
-
-              // Card Button
-              const cardButton = document.getElementById('card-button');
-              cardButton.addEventListener('click', async function (event) {
-                  await handlePaymentMethodSubmission(event, card);
-              });
-          });
-
-    </script>
-  </head>
-  <body>
-    <form id="payment-form">
-        {% csrf_token %}
-      <div id="card-container"></div>
-      <button id="card-button" type="button">Pay $1.00</button>
-    </form>
-    <div id="payment-status-container"></div>
-  </body>
-</html>
+  initializeSquare();
+</script>

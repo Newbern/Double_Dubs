@@ -12,7 +12,7 @@
         * Make anonymises user See Sauces but Must Sign-in for more
         * They Must be signed in or create and account to Purchased
         - Finish Front-end
-        - Make Images Bigger with Text
+        * Make Images Bigger with Text
 
 # Add Sauce
     * Only Staff can access this
@@ -34,15 +34,16 @@
     - Finish Front-end
 
 # Purchase Settings
-    - Card Info
+    * Card Info
     - Finish Front-end
-    - ...
+    - Refund Payments
+    - History of Order Ids
 
 # Data Sheet
     - Google Sheet API
-    - Email API (Monthly Report Sent to Owners)
+    - Email API (Monthly Report Sent to Owners) (NO)
     - Finish Front-end
-    - Gives Double_Dubs a Visual Grid on Sauces being Purchased
+    - Gives Double_Dubs a Visual Grid on Sauces being Purchased (NO)
     - Also Places Data Detail in a Google SpreadSheet
 
 # Contact us
@@ -52,19 +53,20 @@
 
 # Cart
     - Finish Front-end
+    - Erase Card AFTER purchased
     * List of sauce with image
     * Total Price of Each sauce
-    - Confirm & Continue to Payment Page
+    * Confirm & Continue to Payment Page
     * Delete button for Sauce
     * Quantity & edit of Sauce
 
 # Payment Method
-    - Set up Cash-app API
-    - Confirm Email Address & Mailing Address
-    - Email Receipt
+    X Set up Cash-app API (Sqaure Up)
+    X Confirm Email Address & Mailing Address
+    * Email Receipt
     - Responsive submission response
     - Finish Front-End
-    - Confirm to Pay
+    * Confirm to Pay
     - Add Information to Google Sheet
 
 
@@ -88,7 +90,6 @@
 
 
 ---- LEARNING LIST ------
-- Cash-app API
 - Data Sheet Api (Google Sheet API) (Email API Setup)
 
 ------ QUESTIONS FOR COMPANY -------
@@ -113,20 +114,17 @@
 # Account
     - Change Backend Model Code for other models in the same model..(Ex. main/models.py/Account -> Account/models.py/Account)??
     - Email Exist Change email? (May cause errors trying to sign in)
+        - Add secret question
 
 # Cart
-    - Make Submit Button (Links to new url that deals with Cash-app api)
+    * Make Submit Button (Links to new url that deals with Cash-app api)
     - Make Responsive
 
 # Login
     - Forgot Password (Email Api Setup)
 
 ------------- API LIST ----------------------
-- Create Payment
-    - Make sure to add
-        * Refrence_id
-        * Make Sure new Cards work
-            - Create Model to store in Database
+
 
     - Refunds
         - Create a Payment list
@@ -144,28 +142,47 @@
 
 
 
-
-* Checkout Method
 - Refund Method
-- Payment List
-- Card on File
 - Orders History/ Id
 
 
+---------------- TO DO LIST -------------------
+
+- Cart Subtotal item count
+
+- Refund Button
+- Add Payment method needed when buying
+-
 
 
---------------- API TODO LIST ----------
-
-- Create Payment website
-    * Card Token (Must Receive from front-end side)
-    * Payment ID (In Backend) # DON'T SHOW
-    - Card Selector
-    - Card Page
-    - Enable / Disable button
-        - Selects None
-        - Just Refreshes to Payment method website
 
 
+--------------- TO DO LIST ----------------------
+
+- Refund
+    * Fix Refund Indecator
+    * X-out Refund Button
+
+- Orders
+    - Add Completed Button
+    - Add Incompleted Button
+    - Random order id?
+
+- Backend
+    - Fix Order.username (on_delete)  # Can you Erase?
+    - Change Status to Completed_status
+
+- Cart
+    - Fix to Make Redirect to Purches method
+
+- Account
+    - Fix to make User set account settings
+
+- Google Sheet Data
+    ...
+
+- Advertisement
+    ...
 
 
 
