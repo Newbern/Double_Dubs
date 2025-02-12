@@ -1,0 +1,80 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block styles %}
+    <style>
+        .whole-block {
+            display:flex;
+            flex-direction: column;
+            align-items:center
+
+        }
+
+        .lst-box {
+            display:flex;
+            flex-direction: column;
+            align-items:center
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: space-around;">
+        <div class="whole-block">
+        <form class="lst-box" method="post">
+        {% csrf_token %}
+            <!-- Order Label -->
+            <label for="lst-box">Orders</label>
+
+            <!-- Incomplete Radio Button -->
+            <label>Incomplete <input type="radio" name="lst-type" value="Incomplete" onchange="this.form.submit()" {% if selected == "Incomplete" %}checked{% endif %}></label>
+
+            <!-- Complete Radio Button -->
+            <label>Complete <input type="radio" name="lst-type" value="Complete" onchange="this.form.submit()" {% if selected == "Complete" %}checked{% endif %}></label>
+
+            <!-- All Radio Button -->
+            <label>All <input type="radio" name="lst-type" value="All" onchange="this.form.submit()" {% if selected == "All" %}checked{% endif %}></label>
+
+            <!-- Collecting List -->
+        <div style="display:flex">
+            <select id="dropdown">
+                {% for name, lst, item in orders %}
+                    <option value="{{ lst }}"
+                            {% if forloop.first %}
+                                selected
+                            {% endif %}>
+                        {{ name }} --- {{ item.order_id }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Showing Data -->
+            <h2 id="customers" style="margin-left:10px"></h2>
+        </div>
+
+
+        </form>
+
+    </div>
+        <p id="output" style="font-family: 'Loved By The King'; font-size: xx-large;"></p>
+    </div>
+{% endblock %}
+
+
+{% block Javascript %}
+    <script>
+        function info (){
+            let dropdown = document.getElementById("dropdown")
+            let selected_item = dropdown.options[dropdown.selectedIndex].value
+            document.getElementById("output").innerText = selected_item
+
+
+            document.getElementById('customers').innerText = dropdown.options.length
+        }
+
+        document.addEventListener("DOMContentLoaded", info)
+        document.addEventListener('change', info)
+
+    </script>
+{% endblock %}

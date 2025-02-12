@@ -1,0 +1,132 @@
+{% extends 'main/base.html' %}
+
+{% block Title %}Refund Page{% endblock %}
+
+{% block styles %}
+    <style>
+        .whole-block{
+            display:flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+
+        .right-block{
+            display: flex;
+            flex-direction: column;
+            background-color: black;
+            color: white;
+            width: 350px;
+            height: 350px;
+        }
+        .right-block h1, h3{
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .refund-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 100%;
+            border: 1px black solid;
+            background: linear-gradient(135deg, transparent 0%,
+            {% if order.refund_status %}
+                red
+            {% else %}
+                green
+            {% endif %});
+        }
+
+        .submit-btn{
+            margin-top:5px;
+            font-family:'Loved By The King';
+            font-size: x-large;
+        }
+
+
+
+
+        .button-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .line {
+            width: 120%;
+            height: 2px;
+            background-color: red;
+            position: absolute;
+            bottom: 50%;
+            right:10%;
+            left: -10%;
+        }
+
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <!-- Whole Block -->
+    <div class="whole-block">
+
+        <!-- Left Block -->
+        <div class="left-block">
+            <form method="get">
+            {% csrf_token %}
+            <label>
+                Search Order_id
+                <input type="number" name="order-id">
+                <button type="submit">Get</button>
+
+            </label>
+        </form>
+        </div>
+
+        <!-- Right Block -->
+        <!-- And Button -->
+        <div>
+            <div style="display:flex; align-items: center">
+                <div class="refund-indicator"></div>Refund Status
+            </div>
+            <form method="post">
+                <div class="right-block">
+                    {% if order %}
+                        <!-- Getting Customer Name -->
+                        <h1>{{ name }}</h1>
+                        <!-- Getting Customer Total Payment -->
+                        <h3>${{ order.total_payment }}</h3>
+                        <!-- Getting Customer Cart -->
+                        <ul>
+                            <!-- Sauce Items -->
+                            {% for i in order.cart %}
+                                <li>{{ i }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Refund Button -->
+                    <!-- Simple Button Wrapper to store the Line in -->
+                    <div class="button-wrapper">
+                        <!-- Checking refund status -->
+                         {% if order.refund_status %}
+                            <div class="line"></div>
+                        {% endif %}
+
+                        <!-- Disabling the Button if refund status is True -->
+                        <button type="submit" class="submit-btn"
+                            {% if order.refund_status %}
+                                style="cursor:not-allowed" disabled
+                            {% endif %}
+                            >Refund Payment</button>
+                    </div>
+
+            </form>
+        </div>
+
+
+
+
+    </div>
+{% endblock %}

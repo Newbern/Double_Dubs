@@ -12,6 +12,7 @@ urlpatterns = [
     path('refund/', views.refund, name='refund'),
     path('add/', views.add, name='add'),
     path('edit/', views.edit, name='edit'),
+    path('orders/', views.orders, name='orders')
 ]
 
 # Uploading Images
