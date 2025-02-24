@@ -2,79 +2,145 @@
 
 {% block title %}Orders{% endblock %}
 
+{% block head %}Orders{% endblock %}
+
 {% block styles %}
     <style>
         .whole-block {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .left-block {
             display:flex;
             flex-direction: column;
             align-items:center
+        }
+
+        .radio-block {
+            display:flex;
+            flex-direction: column;
+            align-items:center
+        }
+
+        .right-block{
+            width:25%;
+            height:375px
+        }
+
+        .data-block{
+            display:flex;
+            flex-direction: column;
+            align-items:center;
+            width: 100%;
+            height: 100%;
+            border:3px solid black
+        }
+
+        .btn-block{
+            display:flex;
+            justify-content: space-between;
+            margin-inline:10px;
+            margin-top:5px
+        }
+
+        .submit-btn {
 
         }
 
-        .lst-box {
-            display:flex;
-            flex-direction: column;
-            align-items:center
+        /* Responsive */
+        @media screen and (max-width: 600px){
+            .whole-block{
+                flex-direction: column;
+                align-items: center;
+                gap:10px
+            }
+
+            .right-block{
+                display:flex;
+                flex-direction: column;
+                align-items:center;
+                width:auto;
+            }
+
+            .data-block{
+                width:150%
+            }
         }
     </style>
 
 {% endblock %}
 
 {% block content %}
-    <div style="display: flex; justify-content: space-around;">
-        <div class="whole-block">
-        <form class="lst-box" method="post">
-        {% csrf_token %}
-            <!-- Order Label -->
-            <label for="lst-box">Orders</label>
+    <!-- Whole Block -->
+    <div class="whole-block">
+        <!-- Left Block -->
+        <div class="left-block">
 
-            <!-- Incomplete Radio Button -->
-            <label>Incomplete <input type="radio" name="lst-type" value="Incomplete" onchange="this.form.submit()" {% if selected == "Incomplete" %}checked{% endif %}></label>
+            <!-- Radio Buttons -->
+            <form class="radio-block" method="get">
+                {% csrf_token %}
+                <!-- Order Label -->
+                <label for="radio-block">Orders</label>
 
-            <!-- Complete Radio Button -->
-            <label>Complete <input type="radio" name="lst-type" value="Complete" onchange="this.form.submit()" {% if selected == "Complete" %}checked{% endif %}></label>
+                <!-- Incomplete Radio Button -->
+                <label>Incomplete <input type="radio" name="radio-btn" value="Incomplete" onchange="this.form.submit()" {% if selected == "Incomplete" %}checked{% endif %}></label>
 
-            <!-- All Radio Button -->
-            <label>All <input type="radio" name="lst-type" value="All" onchange="this.form.submit()" {% if selected == "All" %}checked{% endif %}></label>
+                <!-- Complete Radio Button -->
+                <label>Complete <input type="radio" name="radio-btn" value="Complete" onchange="this.form.submit()" {% if selected == "Complete" %}checked{% endif %}></label>
 
-            <!-- Collecting List -->
-        <div style="display:flex">
-            <select id="dropdown" onchange="this.form.submit()">
-                {% for name, lst, item in orders %}
-                    <option value="{{ lst }}"
-                            {% if forloop.first %}
-                                selected
-                            {% endif %}>
-                        {{ name }} --- {{ item.order_id }}</option>
-                {% endfor %}
-            </select>
+                <!-- All Radio Button -->
+                <label>All <input type="radio" name="radio-btn" value="All" onchange="this.form.submit()" {% if selected == "All" %}checked{% endif %}></label>
+            </form>
 
-            <!-- Showing Data -->
-            <h2 id="customers" style="margin-left:10px"></h2>
+
+            <!-- Select List -->
+            <form method="get">
+            {% csrf_token %}
+                <div style="display:flex">
+                    <select name="dropdown" id="dropdown" onchange="this.form.submit()">
+                        {% for name, lst in orders %}
+                            <option value="{{ lst.order_id }}"
+                                    {% if lst.order_id == result.order_id %}
+                                    selected
+                                    {% endif %}>
+                                {{ name }} --- {{ lst.order_id }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+
         </div>
 
-
-        </form>
-
+        <!-- Right Block -->
+        <div class="right-block">
+            <div class="data-block">
+                <!-- Header -->
+                <h1>{{ name }}</h1>
+                {% if result is not None %}
+                    <!-- Order Id -->
+                    <p>order ID: {{ result.order_id }}</p>
+                    <!-- Last 4 Numbers -->
+                    <p>card last4: {{ result.card_last_4 }}</p>
+                    <!-- Total Payment -->
+                    <h4>${{ result.total_payment }}</h4>
+                    <!-- Cart Data -->
+                    <ul>
+                        {% for key, value in result.cart.items %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <!-- Submit Buttons -->
+            <form class="btn-block" method="post">
+                {% csrf_token %}
+                <input name="order_id" type="hidden" value="{{ result.order_id }}">
+                <button name="btn" type="submit" value="Complete">Complete</button>
+                <button name="btn" type="submit" value="Incomplete">Incomplete</button>
+            </form>
+        </div>
     </div>
-        <p id="output" style="font-family: 'Loved By The King'; font-size: xx-large;"></p>
-    </div>
-{% endblock %}
 
-
-{% block Javascript %}
-    <script>
-        function info (){
-            let dropdown = document.getElementById("dropdown")
-            let selected_item = dropdown.options[dropdown.selectedIndex].value
-            document.getElementById("output").innerText = selected_item
-
-
-            document.getElementById('customers').innerText = dropdown.options.length
-        }
-
-        document.addEventListener("DOMContentLoaded", info)
-        document.addEventListener('change', info)
-
-    </script>
 {% endblock %}

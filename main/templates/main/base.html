@@ -24,6 +24,7 @@
             display:flex;
             {#border-bottom: 4px solid darkgray;#}
             background-color:transparent;
+            justify-content: space-between;
         }
 
         /* Hamburger Button */
@@ -115,6 +116,18 @@
             text-align: center;
         }
 
+        /* Contact us block */
+        .contact-us {
+            display:flex;
+            flex-direction: column;
+            width:100%;
+            height:0;
+            overflow-y: hidden;
+            transition: 0.5s;
+
+
+        }
+
         /* Responsive sizing */
 
 
@@ -137,6 +150,8 @@
                 <div class="patty"></div>
             </button>
         </span>
+
+        {% block cart-shortcut %}{% endblock %}
     </div>
 
     <!-- Side Bar -->
@@ -169,7 +184,18 @@
             {% endif %}
 
             <!-- Contact us -->
-            <a class="tabs" href="/contact"><img src="/media/default/sauce_icon.png" width="25"> Contact Us</a>
+            <a class="tabs" style="cursor: pointer;" id="contact" onclick="contact_us()"><img src="/media/default/sauce_icon.png" width="25"> Contact Us</a>
+
+            <!-- Contact us Text Box -->
+            <div id="contact-box" class="contact-us">
+                <!-- Sending Message to specific url -->
+                <form action="{% url 'contact-us' %}" method="post" style="display:flex; align-items: flex-end; margin-bottom:3px; justify-content: center">
+                    {% csrf_token %}
+                    <textarea name="message" placeholder="Message here"></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
 
             <!-- If Authorized by Superuser or Staff Member -->
             {% if request.user.is_staff or request.user.is_superuser %}
@@ -256,6 +282,27 @@
         }
         else {
             document.getElementById('sidebar').style.width = '0';
+        }
+    }
+
+    // Contact us
+    function contact_us() {
+        console.log(1243)
+        let contact = document.getElementById('contact')
+
+        let contact_box = document.getElementById('contact-box')
+
+
+
+
+        if (contact_box.style.height === "fit-content") {
+            contact_box.style.height = '0'
+            contact.style = 'background:black; color:white; border-color:white; cursor: pointer'
+        }
+
+        else {
+            contact_box.style.height = 'fit-content'
+            contact.style = 'background:white; color:black; border-color:black; cursor: pointer'
         }
     }
 

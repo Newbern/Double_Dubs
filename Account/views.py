@@ -5,7 +5,8 @@ from Account.form import *
 from Account.models import *
 import json
 import Double_Dubs.settings as settings
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
+from django.contrib import messages
 import requests
 from square.client import Client
 from uuid import uuid1 as uuid
@@ -30,13 +31,7 @@ def squareup_customer(request):
                 "company_name": "Double Dubs",
                 "email_address": user.email,
                 "family_name": user.last_name,
-                "given_name": user.first_name,
-                "phone_number": f"{account.phone}",
-                "address": {
-                    "address_line_1": account.address
-                }
-
-
+                "given_name": user.first_name
             }
         )
 
@@ -57,13 +52,7 @@ def squareup_customer(request):
                 "company_name": "Double Dubs",
                 "email_address": user.email,
                 "family_name": user.last_name,
-                "given_name": user.first_name,
-                "phone_number": f"{account.phone}",
-                "address": {
-                    "address_line_1": account.address
-                }
-
-
+                "given_name": user.first_name
             }
         )
 
@@ -99,9 +88,23 @@ def my_account(request):
         phone_form = AccountPhoneForm(instance=account)
 
     elif request.method == "POST":
+        # Setting up User
+        user = User.objects.filter(username=request.user).first()
+
         # Retrieving data from form
         form = AccountForm(request.POST, instance=request.user)
         phone_form = AccountPhoneForm(request.POST, instance=account)
+
+        # Checking to see if Email already exist
+        if user.email != request.POST.get("email"):
+
+            # Checking to see if Email is Taken
+            if User.objects.filter(email=request.POST.get("email")).first():
+                # Error Message
+                messages.error(request, "Account already exists")
+
+                # Returning to Account Settings
+                return redirect('my_account')
 
         # Checking to see if data is in correctly
         if form.is_valid() and phone_form.is_valid():
@@ -141,6 +144,9 @@ def address(request):
 
 # Getting Card Payment Methods
 def payment_method(request):
+    # Squareup Customer Updating/Creating
+    squareup_customer(request)
+
     # Getting Account
     account = Account.objects.filter(username=request.user).first()
 
@@ -160,13 +166,15 @@ def payment_method(request):
             account.payment_method = request.POST.get("card-list")
             account.save()
 
-    return render(
-        request, 'Account/Payment_Method.html', {
+        return redirect('payment_method')
+
+    elif request.method == "GET":
+        return render(request, 'Account/Payment_Method.html', {
             'lst': lst,
             "option_selected": account.payment_method,
-            "id_name": 'payment_method',
+            "id_name": 'payment-method',
             "name": 'Payment Method'}
-    )
+        )
 
 
 # Adding Card to Squareup api
@@ -283,8 +291,10 @@ def history(request):
     # Getting all the Users Orders
     customer_id = Payment_method.objects.filter(username=request.user).first().customer_id
 
+    # Reversing this List to Place it in descending order
     lst = reversed([item for item in Order.objects.filter(customer_id=customer_id)])
 
 
-    return render(request, 'Account/History.html', {"id_name": 'history',"name": 'History', 'lst': lst})
+
+    return render(request, 'Account/History.html', {"id_name": 'history',"name": 'History', 'lst': lst,})
 

@@ -17,13 +17,13 @@
 # Add Sauce
     * Only Staff can access this
     * also make this mobile responsive
-    - Finish Front-end
+    * Finish Front-end
 
 # Edit Sauce
     * Also allows Sauce to be Deleted
     * Only Staff can access this
     * also make this mobile responsive
-    - Finish Front-end
+    * Finish Front-end
 
 # Account Settings
     x Account Image?
@@ -31,7 +31,7 @@
     * Add Address
     x Add First-name (this Will be added in the User NOT the Account) # Changes with User
     x Add Last-name (this Will be added in the User NOT the Account) # Changes with User
-    - Finish Front-end
+    * Finish Front-end
 
 # Purchase Settings
     * Card Info
@@ -39,7 +39,7 @@
     * Refund Payments
     * History of Order Ids
 
-# Data Sheet
+X Data Sheet
     - Google Sheet API
     - Email API (Monthly Report Sent to Owners) (NO)
     - Finish Front-end
@@ -47,9 +47,9 @@
     - Also Places Data Detail in a Google SpreadSheet
 
 # Contact us
-    - Email API
-    - Send Email to Double_Dubs
-    - Social Media
+    * Email API
+    * Send Email to Double_Dubs
+    * Social Media
 
 # Cart
     - Finish Front-end
@@ -67,25 +67,25 @@
     - Responsive submission response
     - Finish Front-End
     * Confirm to Pay
-    - Add Information to Google Sheet
+    X Add Information to Google Sheet
 
 
 # Login
     * Only Staff Users can access Add/Edit Sauce & Admin
     * Non Users will be directed to Signup or Create login
-    - Forgot Password (Email API Setup)
-    - Finish Front-end
+    X Forgot Password (Email API Setup)
+    * Finish Front-end
 
 # Signup
     * Create a register website
-    - Finish Front-end
+    * Finish Front-end
     * Create new Account
     * Create simi good-looking website
 
 # Logout
     * Create a Logout Website
         # Redirected to Home Page
-    - Finish Front-end
+    * Finish Front-end
     * Make this loop back to un-registered home page
 
 
@@ -104,45 +104,26 @@
     - Background hover on side buttons
     - Responsive tabs (make height just a bit bigger)
 
-# Advertisement
-    - Add Mass Email Tab
-    - Add Mass Employ Email Tab
-
 # Account
-    - Change Backend Model Code for other models in the same model..(Ex. main/models.py/Account -> Account/models.py/Account)??
-    - Email Exist Change email? (May cause errors trying to sign in)
-        - Add secret question
+    X Change Backend Model Code for other models in the same model..(Ex. main/models.py/Account -> Account/models.py/Account)??
+    * Email Exist Change email? (May cause errors trying to sign in)
+        X Add secret question
 
 # Cart
     * Make Submit Button (Links to new url that deals with Cash-app api)
     - Make Responsive
 
 # Login
-    - Forgot Password (Email Api Setup)
+    X Forgot Password (Email Api Setup)
 
 
 --------------- TO DO LIST ----------------------
 
 - Orders
-    - Fix First Selected When Getting USer
-    - Random order id?
-    - Add Address?
-    - Add Phone?
-    - Add Amount of Sauces?
+    - Accessory's
+        - Random order id?
 
-- History
-    - Needs to see (Tabel or DropDown?)
-        - Cart & Items
-        - Total
-        - Payment Card
-
-- Account
-    - Fix to make User set account settings
-    - Make Payment Method Have A Message
-    - History
-        - Add All User Orders And Place in A Scroll Bar that they Click and it SHows Data on The Right
-
-- Google Sheet Data
+- Google Sheet Data    (Adding Google Sheet Data will Make Pages load longer)
     - Finish Making a Type of Order for Every User
     - Make a Graph that floats
         - They Need to see
@@ -155,39 +136,7 @@
             - email
             - cart
 
-- Advertisement
-    - Add Image Block to Insert the image
-        - Make the Image Show Live??
-        - Multiple Images? or max of 5?
-
-    - Add Text Box
-    - Add Header
-    - Add Check box of People
-        - Separate to
-            - Employees
-            - customers
-            - all
-    - FaceBook link?
-
-- Contact Us
-    - Front End
-        - Add Text Box
-        - Add Button
-        - Add 2 Images to Be loaded
-    - Back End
-        - Send Email With Images
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+X Advertisement    (Adding Image requires a path location & more wait time)
+    X Add Image Block to Insert the image
+        * Make the Image Show Live??
+        * Multiple Images? or max of 5?

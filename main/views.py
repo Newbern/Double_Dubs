@@ -74,6 +74,43 @@ def menu(request):
         return redirect("home")
 
 
+# Contact us
+def contact_us(request):
+    if request.method == 'POST':
+
+        # Checking to See if User is Logged in
+        if request.user.is_authenticated:
+            # Getting Email Address
+            user = User.objects.get(username=request.user)
+
+            # Getting Message
+            message = request.POST.get('message')
+
+            # Checking to see if User has Email setup
+            if user.email is not None and message is not None:
+                message = message
+
+                # Checking to see if First and Last Name is Used
+                if user.first_name or user.last_name != "":
+                    # Separating First & Last Name
+                    name = " ".join([user.first_name, user.last_name])
+
+                # If First & Last Name isn't used, then use Email
+                else:
+                    name = user.email
+
+                send_mail(
+                    f"REPLY TO {name}",
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [settings.EMAIL_HOST_USER, user.email],
+                    fail_silently=False
+                )
+
+
+    return redirect('home')
+
+
 # Cart
 def cart(request):
     # Loading Cart data
@@ -119,7 +156,7 @@ def cart(request):
         total = request.POST.get('real_total')
 
         # Updating Google Sheets Database
-        google_data(request)
+        #google_data(request)
 
         # Updating Database
         info = Account.objects.filter(username=request.user).first()
@@ -166,7 +203,7 @@ def checkout(request):
         card = Account.objects.filter(username=request.user).first().payment_method
 
         # Checking if Card exist or is selected
-        if not Payment_method.objects.filter(username=request.user, last_4=card).first():
+        if not Payment_method.objects.filter(username=request.user, last_4=card).first() or card is None:
             return redirect('payment_method')
 
         # Getting Payment Method from account
@@ -208,7 +245,7 @@ def checkout(request):
 
                 # Sending Email
                 send_mail(
-                    f"REPLY TO: {name}",
+                    f"{name} RECEIPT",
                     message,
                     settings.EMAIL_HOST_USER,
                     [user.email, settings.EMAIL_HOST_USER],
@@ -232,7 +269,20 @@ def checkout(request):
             # Saving Order
             order.save()
 
-            # Deleting Current Card
+            sauces = Sauce.objects.all()
+            # Updating Sauce Item quantity in Database
+            for sauce_item in sauces:
+                for cart_item in account.cart:
+                    # Checking to make sure there the save key
+                    if sauce_item.name == cart_item:
+                        # Removing Items Bought
+                        sauce_item.instock -= account.cart[cart_item]
+                        # Saving to database
+                        sauce_item.save()
+
+
+
+            # Deleting Current Cart
             account.cart = {}
             account.save()
 
@@ -295,7 +345,7 @@ def add(request):
         return redirect('home')
 
 
-# Superuser & Staff User Editing Sauce Items
+# Superuser & Staff Users Editing Sauce Items
 def edit(request):
     # Checking to see if superuser
     if request.user.is_authenticated and request.user.is_staff:
@@ -352,13 +402,15 @@ def edit(request):
                 return redirect('home')
 
 
-# Superuser & Staff User Orders Status
+# Superuser & Staff Users Orders Status
 def orders(request):
     # Collecting all Orders
     orders = Order.objects.all()
 
     # Getting Separate List
     lst = [(Payment_method.objects.filter(customer_id=customer_order.customer_id).first().username, customer_order) for customer_order in orders]
+    # Reversing List for Descending order
+    lst.reverse()
     complete_lst = [order for order in lst if order[1].completed_status]
     incomplete_lst = [order for order in lst if not order[1].completed_status]
 
@@ -387,7 +439,13 @@ def orders(request):
             result = None
             name = None
 
-        return render(request, 'main/Orders1.html', {'orders': lst, 'selected': radio_btn, 'result': result, 'name': name})
+        return render(request, 'main/Orders.html', {
+            'orders': lst,
+            'selected': radio_btn,
+            'result': result,
+            'name': name
+        }
+                      )
 
     elif request.method == "POST":
         # Getting Button Value
@@ -399,16 +457,16 @@ def orders(request):
 
         # Updating Status
         if button == "Complete":
-            order.status = True
+            order.completed_status = True
         elif button == "Incomplete":
-            order.status = False
+            order.completed_status = False
 
         order.save()
 
         return redirect('orders')
 
 
-# Superuser & Staff User Refund Payments
+# Superuser & Staff Users Refund Payments
 def refund(request):
 
     # Getting Order Id
@@ -460,11 +518,55 @@ def refund(request):
         return redirect('refund')
 
 
+# Superuser & Staff Users Advertisement
+def ads(request):
+
+    if request.method == "POST":
+        # Come Back to Later
+        # Collecting all Images
+        # img_lst = [file for file in request.FILES.getlist('files')]
+
+        # Getting Subject
+        subject = request.POST.get('subject')
+        # Getting Message
+        message = request.POST.get('message')
+
+        # Checking CheckBox's
+        customer = request.POST.get('customer')
+        employee = request.POST.get('employee')
+
+        # Collecting all Employee and Customer Emails
+        employee_lst = []
+        customer_lst = []
+        for status in Account.objects.all():
+            if status.employee:
+                employee_lst.append(User.objects.filter(username=status.username).first().email)
+            else:
+                customer_lst.append(User.objects.filter(username=status.username).first().email)
 
 
+        email_lst=None
+        # Getting the Selected list
+        if employee is not None:
+            email_lst = employee_lst
+        elif customer is not None:
+            email_lst = customer_lst
+        if (employee and customer) is not None:
+            email_lst = employee_lst + customer_lst
 
 
+        # Going Through Recipients Email List
+        for recipient in email_lst:
+            send_mail(
+                subject,
+                message,
+                settings.EMAIL_HOST_USER,
+                [recipient],
+                fail_silently=False
+                    )
 
+        # Returning Home After Emails Are Sent
+        return redirect('home')
 
-
-
+    # Loading In Advertisement Page
+    return render(request, 'main/Advertisement.html', {})

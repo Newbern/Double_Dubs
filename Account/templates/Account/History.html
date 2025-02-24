@@ -1,28 +1,46 @@
 {% extends 'Account/base.html' %}
 
+{% block styles2 %}
+    <style>
+         /* Scrollable container */
+        .scroll-container {
+            width: 300px;
+            height: 400px; /* Adjust height as needed */
+            overflow-y: auto; /* Enables vertical scrolling */
+            overflow-x: hidden; /* Prevents horizontal scrolling */
+            border: 2px solid #333;
+            padding: 10px;
+            background-color: #f9f9f9;
+
+        }
+
+        /* Inner divs */
+        .box123 {
+            background-color: lightblue;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
 {% block content2 %}
-    <div style="display:flex; flex-direction:column">
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Sauces</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Going Through Orders -->
-                {% for order in lst %}
-                    <!-- All Items In Cart -->
-                    <tr>
-
-                        {% for sauce in order.cart %}
-                            <td>{{ sauce }}</td>
-                        {% endfor %}
-                    </tr>
-
-
+    <div style="display:flex; flex-direction:column" class="scroll-container">
+    {% for order in lst %}
+        <div class="box123">
+            <h3>Order ID: {{ order.order_id }}</h3>
+            <p>Refund Status: {% if order.refund_status %}Returned{% else %}Not Returned{% endif %}</p>
+            <p>Payment Method: {% if order.card_last_4 == None%}Cash{% else %}**** {{ order.card_last_4 }}{% endif %}</p>
+            <h3>Total: ${{ order.total_payment }}</h3>
+            <ul>
+                {% for key, value in order.cart.items %}
+                    <li>{{ key }}: {{ value }}</li>
                 {% endfor %}
-            </tbody>
-        </table>
+            </ul>
+        </div>
+    {% endfor %}
     </div>
 {% endblock %}
+
+{% block button %}{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Advertisment{% endblock %}
+
+{% block head %}Advertisment{% endblock %}
+
+{% block styles %}
+    <style>
+        .whole-block {
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="whole-block">
+        <form method="post" class="whole-block" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h1>Advertisement</h1>
+            <!-- Customer Check Button -->
+            <label>
+                <input name="customer" type="checkbox" checked>
+                Customers
+            </label>
+            <!-- Employees Check Button -->
+            <label>
+                <input name="employee" type="checkbox">
+                Employees
+            </label>
+
+            <!-- Header Text Area -->
+            <label style="display: flex; flex-direction: column; align-items: center; width:100%">
+                Header
+                <input name='subject' type="text" placeholder="Subject here" value="🚨NEW SAUCE🚨">
+            </label>
+
+            <!-- Message Text Area -->
+            <label style="display: flex; flex-direction: column; align-items: center; width:100%">
+                Message
+                <textarea name="message" placeholder="Message here" style="width:100%; height:250px"></textarea>
+            </label>
+
+
+{#            <!-- Images -->#}
+{#            <button type="button" onclick="add_file()">Add Image</button>#}
+{#            <div name="images" id="file-container"></div>#}
+{##}
+{#            <!-- Preview Images -->#}
+{#            <div id="preview-container"></div>  #}
+
+
+            <!-- Submit Button -->
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+
+{% block NOJavascript %}
+    <script>
+        let num = 0
+        function add_file() {
+            document.getElementById("file-container").insertAdjacentHTML("afterend", "<input type='file' name='files' id='img' onchange='previewImage(this)'>")
+        }
+
+        function previewImage(input){
+            let container = document.getElementById('preview-container');
+            if (input.files && input.files[0]){
+                let img_reader = new FileReader();
+                img_reader.onload = function (e){
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.width=150;
+                    img.height =150;
+                    container.appendChild(img);
+                };
+                img_reader.readAsDataURL(input.files[0])
+            }
+        }
+
+
+    </script>
+{% endblock %}
