@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-rqt0bi^3(3fr_llg@%yx83-oj)qa2l^e3lsgw4(*cbt3(yy7%!
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.136', 'localhost']
-
 
 # Application definition
 INSTALLED_APPS = [
@@ -45,7 +43,6 @@ INSTALLED_APPS = [
     'square',
     'gspread',
     'oauth2client'
-
 
 ]
 
@@ -80,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Double_Dubs.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -90,7 +86,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -109,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -138,7 +132,6 @@ SQUARE_ACCESS_TOKEN = "EAAAlxVsjXq6H0gvQ2bstB2mO6kubExComu19fR6ciz0qPrMwvyuRjvlA
 SQUARE_LOCATION_ID = 'L4PJ5KN2BDPG5'
 SQUARE_ENVIRONMENT = "sandbox"
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -153,3 +146,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# # Security
+
+# Enable HTTP Strict Transport Security (HSTS) to force HTTPS for all subdomains
+#SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False  # Allow browsers to preload the HSTS rule
+
+# Redirect HTTP to HTTPS
+SECURE_SSL_REDIRECT = False  # Redirect all HTTP traffic to HTTPS
+
+# Secure cookies for HTTPS
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+

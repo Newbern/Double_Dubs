@@ -9,10 +9,12 @@ urlpatterns = [
     path('', views.menu, name='home'),
     path('cart/', views.cart, name='cart'),
     path('checkout/', views.checkout, name='checkout'),
-    path('refund/', views.refund, name='refund'),
+    path('contact-us/', views.contact_us, name='contact-us'),
     path('add/', views.add, name='add'),
     path('edit/', views.edit, name='edit'),
-    path('orders/', views.orders, name='orders')
+    path('orders/', views.orders, name='orders'),
+    path('refund/', views.refund, name='refund'),
+    path('ads/', views.ads, name='ads')
 ]
 
 # Uploading Images

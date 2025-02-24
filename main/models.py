@@ -7,6 +7,7 @@ import os
 
 class Account(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    employee = models.BooleanField(default=False)
     payment_method = models.CharField(max_length=10, null=True, blank=True)
     phone = models.IntegerField(null=True, blank=True)
     address = models.CharField(max_length=150, null=True, blank=True)

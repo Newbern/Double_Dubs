@@ -136,7 +136,9 @@
 
 
     </style>
+    {% block styles2 %}{% endblock %}
 {% endblock %}
+
 
 {% block head %}Account{% endblock %}
 
@@ -160,9 +162,17 @@
                 {% block content2 %}
                     {{ form }}
                     {{ form2 }}
+
+                <!-- If messages is sent -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color:red;">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+
                 {% endblock %}
                 <!-- Submit Button -->
-                <button name='submit-btn' value="Submit" type="submit" class="submit-btn">Submit</button>
+                {% block button %}<button name='submit-btn' value="Submit" type="submit" class="submit-btn">Submit</button>{% endblock %}
             </form>
 
         </div>

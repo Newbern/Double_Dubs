@@ -91,28 +91,61 @@
             color: white;
         }
 
+        .processing-block{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin-inline: 250px;
+            margin-bottom: 25px;
+        }
+
 
         @media screen and (max-width: 425px){
             .whole-block{
-                width:100%;
+                display:flex;
                 flex-direction: column;
-                margin-inline:25px
+                width:100%;
+                margin-inline:10px;
+                margin-top:5px;
+                position:static;
+                gap:5px
             }
             .left-block{
                 width:50%;
-                height:50%
+                height:50%;
+                display:flex;
+                flex-direction: column;
+                margin-right:unset;
+                align-items: center;
+
             }
             .left-block img{
                 width:100%;
                 height:100%;
             }
             .mid-block{
-                width:50%;
-                height:50%
+                display:flex;
+                flex-direction: column;
+                align-items:center;
+                width:100%
             }
             .mid-text{
-                width: 100%;
-                height:100%
+                display:flex;
+                flex-direction: column;
+                width:auto
+            }
+            .mid-text p{
+                display:flex
+            }
+            .right-block{
+                display:flex;
+                flex-direction: column;
+                align-items: center;
+                order:-1;
+                position: static;
+            }
+            .processing-block{
+                margin-inline:10px
             }
         }
 
@@ -196,7 +229,7 @@
     </div>
 
     <!-- Submit Order Button -->
-    <form style="display: flex;justify-content: center;flex-direction: column;margin-inline: 250px;margin-bottom: 25px;" method="POST">
+    <form class="processing-block" method="POST">
         {% csrf_token %}
         <input type="hidden" id="real_total" name="real_total" value="None">
         <input type="hidden" id="cart" name="cart" value="None">
